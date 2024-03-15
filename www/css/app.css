@@ -808,3 +808,10 @@ code {
 .pie-chart svg {
   max-width: 320px;
 }
+
+/* ---------------------------- Estilos manuales ---------------------------- */
+
+.tarjetaItem{
+  background-color: darkseagreen;
+  margin: 20px;
+}

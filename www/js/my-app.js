@@ -5,7 +5,7 @@ var app = new Framework7({
     // App root element
     root: '#app',
     // App Name
-    name: 'My App',
+    name: 'DecoMuebles',
     // App id
     id: 'com.myapp.test',
     // Enable swipe panel
@@ -14,10 +14,8 @@ var app = new Framework7({
     },
     // Add default routes
     routes: [
-      {
-        path: '/about/',
-        url: 'about.html',
-      },
+      { path: '/index/', url: 'index.html', options: { transition: 'f7-cover' } },
+      { path: '/about/', url: 'about.html', options: { transition: 'f7-cover' } },
     ]
     // ... other parameters
   });
@@ -31,13 +29,14 @@ $$(document).on('deviceready', function() {
 
 // Option 1. Using one 'page:init' handler for all pages
 $$(document).on('page:init', function (e) {
-    // Do something here when page loaded and initialized
-    console.log(e);
+    
+})
+
+$$(document).on('page:init', '.page[data-name="index"]', function (e) {
+
 })
 
 // Option 2. Using live 'page:init' event handlers for each page
 $$(document).on('page:init', '.page[data-name="about"]', function (e) {
-    // Do something here when page with data-name="about" attribute loaded and initialized
-    console.log(e);
-    alert('Hello');
+
 })
