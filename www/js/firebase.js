@@ -1,11 +1,11 @@
         // Your web app's Firebase configuration
         const firebaseConfig = {
-            apiKey: "AIzaSyDeg3sf5HC_J-AgC2mz700gr6-1yW_UtWI",
-            authDomain: "canchasrosario.firebaseapp.com",
-            projectId: "canchasrosario",
-            storageBucket: "canchasrosario.appspot.com",
-            messagingSenderId: "264703012054",
-            appId: "1:264703012054:web:284b9c4bc6c6273e536d77"
-  };
+            apiKey: "AIzaSyCBw19mPyHqSJw38iy0MXGi7-2fJAyY8i8",
+            authDomain: "deco-muebles-gba.firebaseapp.com",
+            projectId: "deco-muebles-gba",
+            storageBucket: "deco-muebles-gba.appspot.com",
+            messagingSenderId: "504969136400",
+            appId: "1:504969136400:web:54d316ed0e46247df63d95"
+          };
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
