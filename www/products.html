@@ -5,6 +5,29 @@
     <div class="block">
       <h1>Productos</h1>
 
+      <div class="cajaFiltros">
+        <div id="cajaFiltroProv" class="item-inner btnOculto">
+          <div class="item-title item-label">Proveedor</div>
+          <div class="item-input-wrap input-dropdown-wrap">
+            <select id="filtroProveedor" placeholder="Seleccionar proveedor">
+              <option selected value="-">Seleccionar</option>
+              <option value="Proveedor1">Proveedor1</option>
+              <option value="Proveedor2">Proveedor2</option>
+              <option value="Proveedor3">Proveedor3</option>
+              <option value="Proveedor4">Proveedor4</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="cajaFiltroNombre" class="item-inner btnOculto">
+          <div class="item-title item-label">Nombre</div>
+          <div class="item-input-wrap input-dropdown-wrap">
+            <input id="filtroNombre" type="text" placeholder="Nombre">
+          </div>
+        </div>
+      </div>
+
+
       <div class="data-table">
         <table>
           <thead>
@@ -18,21 +41,12 @@
               <th class="medium-only">Detalles</th>
             </tr>
           </thead>
-          <tbody id="tableProducts">
-           <!--  <tr>
-              <td id="datoProducto" class="label-cell"> </td>
-              <td id="datoColor" class="numeric-cell"></td> 
-              <td id="datoPrecio" class="numeric-cell"></td>
-              <td id="datoMedida" class="numeric-cell"></td>
-              <td id="datoStock" class="numeric-cell"></td>
-              <td id="datoProveedor" class="medium-only"></td>
-            </tr> -->
-          </tbody>
+          <tbody id="tableProducts"></tbody>
         </table>
       </div>
 
 
-      <button id="btnListProduct" class="button button-small button-fill" >Listar Productos</button>
+      <button id="btnListProduct" class="button button-small button-fill btnVisible">Listar Productos</button>
       <br>
       <a class="button button-small button-fill" href="/newProduct/">Agregar Producto</a>
       <br>

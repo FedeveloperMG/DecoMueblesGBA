@@ -815,3 +815,17 @@ code {
   background-color: darkseagreen;
   margin: 20px;
 }
+
+.btnVisible{
+  visibility:visible;
+}
+.btnOculto{
+  display: none;
+  visibility:hidden;
+}
+
+.cajaFiltros{
+  display: flex;
+  flex-direction: row;
+  
+}

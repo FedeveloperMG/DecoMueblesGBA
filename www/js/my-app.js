@@ -37,11 +37,14 @@ $$(document).on('page:init', function (e) {
 })
 
 $$(document).on('page:init', '.page[data-name="index"]', function (e) {
+  $$("#toListProducts").on('click', toListProducts)
 })
 
 // Option 2. Using live 'page:init' event handlers for each page
 $$(document).on('page:init', '.page[data-name="products"]', function (e) {
   $$("#btnListProduct").on('click', verProductos)
+  $$("#filtroProveedor").on("change", filtrarProv)
+  $$("#filtroNombre").on("change", filtrarNombre)
 })
 $$(document).on('page:init', '.page[data-name="newProduct"]', function (e) {
   $$("#btnAddProducto").on('click', añadirProducto)
@@ -61,14 +64,16 @@ $$(document).on('page:init', '.page[data-name="fliers"]', function (e) {
 
 db = firebase.firestore()
 colProveedores = db.collection('PROVEEDORES')
+colProductos = db.collection('PRODUCTOS')
 colInsumos = db.collection('INSUMOS')
 colManoDeObra = db.collection('MANODEOBRA')
 
 /* --------------------------- Variables globales --------------------------- */
+var products = []
 
 
 
-
+/* -------------------------------- Funciones ------------------------------- */
 function añadirProducto() {
 
   //Inputs
@@ -119,43 +124,153 @@ function añadirProducto() {
     Proveedor: proveedor
   }
 
-  idProducto = `${nombre}-${tipo}x${ancho}x${alto}x${largo}`
-
-  colProveedores.doc(proveedor).collection("PRODUCTOS").doc(idProducto).set(producto)
-  .then(function(doc){
-    console.log("Producto agregado");
-})
-  .catch(function(err){
-    console.log("Error al agregar producto")
-})
+  if(proveedor == "-"){
+    app.dialog.alert("Ingrese el Proveedor!")
+  }else{ 
+    colProductos.add(producto)
+    .then(function(doc){
+      console.log("Producto agregado");
+      
+    })
+    .catch(function(err){
+      console.log("Error al agregar producto")
+    })
+  }
 }
 
 
 function verProductos() {
-    colProveedores.doc("p1").collection("PRODUCTOS").get()
+
+    colProductos.get()
     .then(function(res){
-      res.forEach(function (doc) {
+      res.forEach(function (doc){
         info = doc.data()
-        console.log(doc.id);
+        
         console.log(info);
 
-      $$("#tableProducts").html(`
-            <tr>
-              <td id="datoProducto" class="label-cell">${info.Nombre}-${info.Tipo}</td>
-              <td id="datoColor" class="numeric-cell">${info.Color}</td> 
-              <td id="datoPrecio" class="numeric-cell">${info.PrecioFinal}</td>
-              <td id="datoMedida" class="numeric-cell">${info.Ancho}x${info.Largo}x${info.Alto}</td>
-              <td id="datoStock" class="numeric-cell">${info.Stock}</td>
-              <td id="datoProveedor" class="medium-only">${info.Proveedor}</td>
-            </tr>
-      `)
+        products.push(info);
 
+        console.log(products);
       });
+
+        // Iterar sobre el array
+        products.forEach(function(valor) {
+          // Crear nueva fila
+          var nuevaFila = $$('<tr>');
+          
+          // Crear celda para el valor
+          var celdaNombre = $$('<td>').text(`${valor.Nombre}-${valor.Tipo}`);
+          var celdaColor = $$('<td>').text(valor.Color);
+          var celdaPrecio = $$('<td>').text(valor.PrecioFinal);
+          var celdaMedida = $$('<td>').text(`${valor.Ancho}x${valor.Largo}x${valor.Ancho}`);
+          var celdaStock = $$('<td>').text(valor.Stock);
+          var celdaProveedor = $$('<td>').text(valor.Proveedor);
+          
+          // Agregar celdas a la fila
+          nuevaFila.append(celdaNombre, celdaColor, celdaPrecio, celdaMedida, celdaStock, celdaProveedor);
+          
+          // Agregar fila al cuerpo de la tabla
+          $$("#tableProducts").append(nuevaFila);
+
+          $$("#btnListProduct").removeClass("btnVisible").addClass("btnOculto")     
+          $$("#cajaFiltroProv").removeClass("btnOculto").addClass("btnVisible")     
+          $$("#cajaFiltroNombre").removeClass("btnOculto").addClass("btnVisible")     
+        });
   })
     .catch(function(err){
       console.log("Error al listar productos")
+  })  
+}
+
+function toListProducts (){
+  products = []
+}
+
+function filtrarProv (){
+
+  products = []
+  $$("#tableProducts").html("")
+
+
+  proveedorElegido = $$("#filtroProveedor").val()
+
+  colProductos.where("Proveedor", "==", proveedorElegido).get()
+  .then(function(res){
+    res.forEach(function (doc){
+      info = doc.data()
+      
+      console.log(info);
+
+      products.push(info);
+
+      console.log(products);
+    });
+
+     // Iterar sobre el array
+     products.forEach(function(valor) {
+      // Crear nueva fila
+      var nuevaFila = $$('<tr>');
+      
+      // Crear celda para el valor
+      var celdaNombre = $$('<td>').text(`${valor.Nombre}-${valor.Tipo}`);
+      var celdaColor = $$('<td>').text(valor.Color);
+      var celdaPrecio = $$('<td>').text(valor.PrecioFinal);
+      var celdaMedida = $$('<td>').text(`${valor.Ancho}x${valor.Largo}x${valor.Ancho}`);
+      var celdaStock = $$('<td>').text(valor.Stock);
+      var celdaProveedor = $$('<td>').text(valor.Proveedor);
+      
+      // Agregar celdas a la fila
+      nuevaFila.append(celdaNombre, celdaColor, celdaPrecio, celdaMedida, celdaStock, celdaProveedor);
+      
+      // Agregar fila al cuerpo de la tabla
+      $$("#tableProducts").append(nuevaFila);
+      products = []
   })
 
-
-  
 }
+)}
+
+
+function filtrarNombre (){
+
+  products = []
+  $$("#tableProducts").html("")
+
+
+  nombreElegido = $$("#filtroNombre").val()
+
+  colProductos.where("Nombre", "==", nombreElegido).get()
+  .then(function(res){
+    res.forEach(function (doc){
+      info = doc.data()
+      
+      console.log(info);
+
+      products.push(info);
+
+      console.log(products);
+    });
+
+     // Iterar sobre el array
+     products.forEach(function(valor) {
+      // Crear nueva fila
+      var nuevaFila = $$('<tr>');
+      
+      // Crear celda para el valor
+      var celdaNombre = $$('<td>').text(`${valor.Nombre}-${valor.Tipo}`);
+      var celdaColor = $$('<td>').text(valor.Color);
+      var celdaPrecio = $$('<td>').text(valor.PrecioFinal);
+      var celdaMedida = $$('<td>').text(`${valor.Ancho}x${valor.Largo}x${valor.Ancho}`);
+      var celdaStock = $$('<td>').text(valor.Stock);
+      var celdaProveedor = $$('<td>').text(valor.Proveedor);
+      
+      // Agregar celdas a la fila
+      nuevaFila.append(celdaNombre, celdaColor, celdaPrecio, celdaMedida, celdaStock, celdaProveedor);
+      
+      // Agregar fila al cuerpo de la tabla
+      $$("#tableProducts").append(nuevaFila);
+      products = []
+  })
+
+}
+)}
