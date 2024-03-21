@@ -4,25 +4,24 @@
   <div class="page-content">
     <div class="block">
       <h1>Productos</h1>
-
-      <div class="cajaFiltros">
-        <div id="cajaFiltroProv" class="item-inner btnOculto">
-          <div class="item-title item-label">Proveedor</div>
-          <div class="item-input-wrap input-dropdown-wrap">
-            <select id="filtroProveedor" placeholder="Seleccionar proveedor">
-              <option selected value="-">Seleccionar</option>
-              <option value="Proveedor1">Proveedor1</option>
-              <option value="Proveedor2">Proveedor2</option>
-              <option value="Proveedor3">Proveedor3</option>
-              <option value="Proveedor4">Proveedor4</option>
-            </select>
+      <div class="cajaFiltroOrden">
+        <div class="cajaFiltros">
+          <div id="cajaFiltroNombre" class="item-inner btnOculto">
+            <div class="item-title item-label">Nombre</div>
+            <div class="item-input-wrap input-dropdown-wrap">
+              <input id="filtroNombre" type="text" placeholder="Nombre">
+            </div>
           </div>
-        </div>
 
-        <div id="cajaFiltroNombre" class="item-inner btnOculto">
-          <div class="item-title item-label">Nombre</div>
+        </div>
+        <div id="cajaOrdenar" class="item-inner btnOculto">
+          <div class="item-title item-label">Ordenar por:</div>
           <div class="item-input-wrap input-dropdown-wrap">
-            <input id="filtroNombre" type="text" placeholder="Nombre">
+            <select id="ordenBy" placeholder="Seleccionar proveedor">
+              <option selected value="Proveedor">Proveedor</option>
+              <option value="PrecioMenMay">Precio Menor > Mayor</option>
+              <option value="PrecioMayMen">Precio Mayor > Menor</option>
+            </select>
           </div>
         </div>
       </div>

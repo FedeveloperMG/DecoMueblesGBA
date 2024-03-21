@@ -823,9 +823,12 @@ code {
   display: none;
   visibility:hidden;
 }
-
 .cajaFiltros{
   display: flex;
   flex-direction: row;
-  
+}
+.cajaFiltroOrden{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
