@@ -3,27 +3,39 @@
 
   <div class="page-content">
     <div class="block">
-      <h1 id="productTitle"></h1>
+      <h1 id="productManoDeObraTitle"></h1>
 
       <div class="data-table">
         <table>
           <thead>
             <tr>
-              <th class="label-cell">Insumo</th>
-              <th class="label-cell">Cantidad</th>
-              <th class="label-cell">Precio Un</th>
-              <th class="label-cell">Precio Total</th>
+              <th class="label-cell">Valor Hora Mano de obra</th>
+              <th class="label-cell">Horas x producto</th>
             </tr>
           </thead>
-          <tbody id="tablaInsumos"></tbody>
+          <tbody id="tablaManoDeObra">
+            <tr>
+              <td id="precioHoraMO"></td>
+              <td id="CantHorasMO"></td>
+            </tr>
+          </tbody>
         </table>
       </div>
 
+      <div class="data-table">
+        <table>
+          <thead>
+            <tr>
+              <td class="label-cell"><h2>Costo Total</h2></td>
+              <td class="label-cell"><h2 id="mOCostoTotal"></h2></td>
+            </tr>
+          </thead>
+        </table>
+      </div>
 
-      <button id="btnListProduct" class="button button-small button-fill btnVisible">Listar Productos</button>
       <br>
       <br>
-      <a class="button button-small button-fill" href="/index/">Ir a Inicio</a>
+      <a class="button button-small button-fill" href="/detailsProduct/">Volver</a>
 
     </div>
   </div>

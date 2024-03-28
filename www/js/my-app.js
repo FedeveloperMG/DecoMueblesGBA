@@ -64,9 +64,11 @@ $$(document).on('page:init', '.page[data-name="fliers"]', function (e) {
 
 $$(document).on('page:init', '.page[data-name="detailsProduct"]', function (e) {
   $$("#detailsProductTitle").text(tituloProductoDetallado);
+
 })
+
 $$(document).on('page:init', '.page[data-name="insumos"]', function (e) {
-  $$("#productTitle").text(tituloInsumos);
+  $$("#productTitle").text(tituloProductoDetallado);
 
   //Cantidades
   $$("#cantLijas").text(cantLijas);
@@ -107,9 +109,16 @@ $$(document).on('page:init', '.page[data-name="insumos"]', function (e) {
 
   //Costo total
   $$("#insumoCostoTotal").text(costoTotal)
-
+  
 })
 $$(document).on('page:init', '.page[data-name="manoObra"]', function (e) {
+  $$("#productManoDeObraTitle").text(tituloProductoDetallado);
+  //Cantidades
+  $$("#CantHorasMO").text(cantHsTrabajo)
+  //Precios
+  $$("#precioHoraMO").text(precioHora)
+  //Costo total
+  $$("#mOCostoTotal").text(costoTotalMO)
 })
 
 
@@ -125,9 +134,9 @@ colManoDeObra = db.collection('MANODEOBRA')
 var products = []
 var insumos = []
 var tituloProductoDetallado, tituloInsumos, detalleLija, detallePincel, detalleRodillo, detallePintura, detalleCola, detalleSilastic, detalleVidrio, detalleDiluyente, detalleMueble, detalleFlete, detalleLuz, detalleHsProducto
-var cantLijas, cantPinceles, cantRodillos, cantPintura, cantCola, cantSilastic, cantVidrio, cantDiluyente, cantMueble, cantFlete, cantLuz
-var precioUnLijas, precioUnPinceles, precioUnRodillos, precioUnPintura, precioUnCola, precioUnSilastic, precioUnVidrio, precioUnDiluyente, precioUnMueble, precioUnFlete, precioUnLuz
-var precioTotalLijas, precioTotalPinceles, precioTotalRodillos, precioTotalPintura, precioTotalCola, precioTotalSilastic, precioTotalVidrio, precioTotalDiluyente, precioTotalMueble, precioTotalFlete, precioTotalLuz
+var cantLijas, cantPinceles, cantRodillos, cantPintura, cantCola, cantSilastic, cantVidrio, cantDiluyente, cantMueble, cantFlete, cantLuz, cantHsTrabajo
+var precioUnLijas, precioUnPinceles, precioUnRodillos, precioUnPintura, precioUnCola, precioUnSilastic, precioUnVidrio, precioUnDiluyente, precioUnMueble, precioUnFlete, precioUnLuz, costoTotal, costoTotalMO
+var precioTotalLijas, precioTotalPinceles, precioTotalRodillos, precioTotalPintura, precioTotalCola, precioTotalSilastic, precioTotalVidrio, precioTotalDiluyente, precioTotalMueble, precioTotalFlete, precioTotalLuz, precioHora
 var variableOrdenamiento = "Proveedor"
 var valorOrdenamiento = "asc"
 var variableQuery = "Proveedor"
@@ -234,8 +243,10 @@ function verProductos() {
 
             tituloProductoDetallado = `${products[dataId].Nombre}-${products[dataId].Tipo}`
             tituloInsumos = `${products[dataId].Nombre}-${products[dataId].Tipo}`
+            mostrarMObra()
 
-            // Crear celda para el valor
+
+          //Variables del producto seleccionado
            cantLijas = `${products[dataId].Lijas}`
            cantPinceles = `${products[dataId].Pinceles}`
            cantRodillos = `${products[dataId].Rodillos}`
@@ -247,10 +258,8 @@ function verProductos() {
            cantMueble = `${products[dataId].Mueble}`
            cantFlete = `${products[dataId].Flete}`
            cantLuz = `${products[dataId].Luz}`
+           cantHsTrabajo = `${products[dataId].Hstrabajo}`
            
-           console.log(products);
-           
-           console.log(cantLijas, cantPinceles, cantRodillos, cantPintura, cantCola, cantSilastic, cantVidrio, cantDiluyente, cantMueble, cantFlete, cantLuz);
 
            //Función para mostrar precios
            mostrarInsumos()
@@ -360,10 +369,7 @@ function mostrarInsumos() {
           
           insumos.push(info.precio)
 
-          
-          
         })
-        console.log(insumos);
         
         //Precios de insumos
         precioUnCola = `${insumos[0]}`
@@ -401,3 +407,19 @@ function mostrarInsumos() {
       })
 
 }
+
+function mostrarMObra() {
+  colManoDeObra.get()
+  .then(function(res){
+    res.forEach(function(doc){
+      datos = doc.data()
+      precioHora = datos.valorH
+    })
+
+    costoTotalMO = precioHora * cantHsTrabajo
+
+  })
+  .catch(function (err) {
+    console.log(err)
+  
+})}
