@@ -36,13 +36,13 @@ $$(document).on('deviceready', function () {
 
 // Option 1. Using one 'page:init' handler for all pages
 $$(document).on('page:init', function (e) {
+  $$("#btnPrueba").on('click',mostrarInsumos)
 
 })
 
 $$(document).on('page:init', '.page[data-name="index"]', function (e) {
   $$("#toListProducts").on('click', toListProducts)
 })
-
 
 $$(document).on('page:init', '.page[data-name="products"]', function (e) {
   $$("#btnListProduct").on('click', verProductos)
@@ -68,6 +68,7 @@ $$(document).on('page:init', '.page[data-name="detailsProduct"]', function (e) {
 $$(document).on('page:init', '.page[data-name="insumos"]', function (e) {
   $$("#productTitle").text(tituloInsumos);
 
+  //Cantidades
   $$("#cantLijas").text(cantLijas);
   $$("#cantPinceles").text(cantPinceles)
   $$("#cantRodillos").text(cantRodillos);
@@ -79,6 +80,33 @@ $$(document).on('page:init', '.page[data-name="insumos"]', function (e) {
   $$("#cantMueble").text(cantMueble);
   $$("#cantFlete").text(cantFlete)
   $$("#cantLuz").text(cantLuz);
+  //Precios
+  $$("#precioUnLijas").text(precioUnLijas);
+  $$("#precioUnPinceles").text(precioUnPinceles)
+  $$("#precioUnRodillos").text(precioUnRodillos);
+  $$("#precioUnPintura").text(precioUnPintura);
+  $$("#precioUnCola").text(precioUnCola)
+  $$("#precioUnSilastic").text(precioUnSilastic);
+  $$("#precioUnVidrio").text(precioUnVidrio);
+  $$("#precioUnDiluyente").text(precioUnDiluyente);
+  $$("#precioUnMueble").text(precioUnMueble);
+  $$("#precioUnFlete").text(precioUnFlete)
+  $$("#precioUnLuz").text(precioUnLuz);
+  //Precios totales
+  $$("#precioTotalLijas").text(precioTotalLijas);
+  $$("#precioTotalPinceles").text(precioTotalPinceles)
+  $$("#precioTotalRodillos").text(precioTotalRodillos);
+  $$("#precioTotalPintura").text(precioTotalPintura);
+  $$("#precioTotalCola").text(precioTotalCola)
+  $$("#precioTotalSilastic").text(precioTotalSilastic);
+  $$("#precioTotalVidrio").text(precioTotalVidrio);
+  $$("#precioTotalDiluyente").text(precioTotalDiluyente);
+  $$("#precioTotalMueble").text(precioTotalMueble);
+  $$("#precioTotalFlete").text(precioTotalFlete)
+  $$("#precioTotalLuz").text(precioTotalLuz);
+
+  //Costo total
+  $$("#insumoCostoTotal").text(costoTotal)
 
 })
 $$(document).on('page:init', '.page[data-name="manoObra"]', function (e) {
@@ -95,8 +123,11 @@ colManoDeObra = db.collection('MANODEOBRA')
 
 /* --------------------------- Variables globales --------------------------- */
 var products = []
+var insumos = []
 var tituloProductoDetallado, tituloInsumos, detalleLija, detallePincel, detalleRodillo, detallePintura, detalleCola, detalleSilastic, detalleVidrio, detalleDiluyente, detalleMueble, detalleFlete, detalleLuz, detalleHsProducto
 var cantLijas, cantPinceles, cantRodillos, cantPintura, cantCola, cantSilastic, cantVidrio, cantDiluyente, cantMueble, cantFlete, cantLuz
+var precioUnLijas, precioUnPinceles, precioUnRodillos, precioUnPintura, precioUnCola, precioUnSilastic, precioUnVidrio, precioUnDiluyente, precioUnMueble, precioUnFlete, precioUnLuz
+var precioTotalLijas, precioTotalPinceles, precioTotalRodillos, precioTotalPintura, precioTotalCola, precioTotalSilastic, precioTotalVidrio, precioTotalDiluyente, precioTotalMueble, precioTotalFlete, precioTotalLuz
 var variableOrdenamiento = "Proveedor"
 var valorOrdenamiento = "asc"
 var variableQuery = "Proveedor"
@@ -220,6 +251,9 @@ function verProductos() {
            console.log(products);
            
            console.log(cantLijas, cantPinceles, cantRodillos, cantPintura, cantCola, cantSilastic, cantVidrio, cantDiluyente, cantMueble, cantFlete, cantLuz);
+
+           //Función para mostrar precios
+           mostrarInsumos()
            
            // Agregar celdas a la fila
            mainView.router.navigate("/detailsProduct/")
@@ -305,5 +339,65 @@ function orderBy(){
   }
 
   verProductos()
+}
+
+//Función para mostrar precios de insumos
+function mostrarInsumos() {
+
+  insumos = []
+
+  insumo = {
+    nombre: "Luz",
+    precio: 100,
+    stock: 10
+  }
+
+    colInsumos.orderBy("nombre").get()
+      .then(function (res) {
+        res.forEach(function (doc){
+          
+          info = doc.data()
+          
+          insumos.push(info.precio)
+
+          
+          
+        })
+        console.log(insumos);
+        
+        //Precios de insumos
+        precioUnCola = `${insumos[0]}`
+        precioUnDiluyente = `${insumos[1]}`
+        precioUnFlete = `${insumos[2]}`
+        precioUnLijas = `${insumos[3]}`
+        precioUnLuz = `${insumos[4]}`
+        precioUnMueble = `${insumos[5]}`
+        precioUnPinceles = `${insumos[6]}`
+        precioUnPintura = `${insumos[7]}`
+        precioUnRodillos = `${insumos[8]}`
+        precioUnSilastic = `${insumos[9]}`
+        precioUnVidrio = `${insumos[10]}`
+        //Precios de insumos
+        precioTotalCola = (precioUnCola * cantCola)
+        precioTotalDiluyente = (precioUnDiluyente * cantDiluyente)
+        precioTotalFlete = (precioUnFlete *  cantFlete)
+        precioTotalLijas = (precioUnLijas * cantLijas)
+        precioTotalLuz = (precioUnLuz * cantLuz)
+        precioTotalMueble = (precioUnMueble * cantMueble)
+        precioTotalPinceles = (precioUnPinceles * cantPinceles)
+        precioTotalPintura = (precioUnPintura * cantPintura)
+        precioTotalRodillos = (precioUnRodillos * cantRodillos)
+        precioTotalSilastic = (precioUnSilastic * cantSilastic)
+        precioTotalVidrio = (precioUnVidrio * cantVidrio)
+
+        //Calculo de costo total
+        costoTotal = (precioUnLijas * cantLijas) + (precioUnPinceles * cantPinceles) + (precioUnRodillos * cantRodillos) + (precioUnPintura * cantPintura) + (precioUnCola * cantCola) + (precioUnSilastic * cantSilastic) + (precioUnVidrio * cantVidrio) + (precioUnDiluyente * cantDiluyente) + (precioUnMueble * cantMueble) + (precioUnFlete *  cantFlete) + (precioUnLuz * cantLuz)
+
+        })
+
+      
+      .catch(function (err) {
+        console.log("Error")
+      })
 
 }
