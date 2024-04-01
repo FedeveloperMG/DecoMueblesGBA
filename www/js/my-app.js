@@ -23,6 +23,8 @@ var app = new Framework7({
     { path: '/detailsProduct/', url: 'detailsProduct.html', options: { transition: 'f7-cover' } },
     { path: '/insumos/', url: 'insumos.html', options: { transition: 'f7-cover' } },
     { path: '/manoObra/', url: 'manoObra.html', options: { transition: 'f7-cover' } },
+    { path: '/preciosInsumos/', url: 'preciosInsumos.html', options: { transition: 'f7-cover' } },
+    { path: '/preciosManoObra/', url: 'preciosManoObra.html', options: { transition: 'f7-cover' } },
   ]
   // ... other parameters
 });
@@ -57,6 +59,7 @@ $$(document).on('page:init', '.page[data-name="vendors"]', function (e) {
 })
 
 $$(document).on('page:init', '.page[data-name="prices"]', function (e) {
+  pricesMO()
 })
 
 $$(document).on('page:init', '.page[data-name="fliers"]', function (e) {
@@ -120,6 +123,14 @@ $$(document).on('page:init', '.page[data-name="manoObra"]', function (e) {
   //Costo total
   $$("#mOCostoTotal").text(costoTotalMO)
 })
+$$(document).on('page:init', '.page[data-name="preciosInsumos"]', function (e) {
+})
+$$(document).on('page:init', '.page[data-name="preciosManoObra"]', function (e) {
+  $$("#precioHoraMOOficial").text(precioHoraMOOficial)
+  $$("#precioHoraMOAyudante").text(precioHoraMOAyudante)
+  $$("#btnActualOficial").on("click", actulizarPreciosMOOf)
+  $$("#btnActualAyudante").on("click", actulizarPreciosMOAy)
+})
 
 
 /* -------------------------------- Variables db ------------------------------- */
@@ -136,7 +147,7 @@ var insumos = []
 var tituloProductoDetallado, tituloInsumos, detalleLija, detallePincel, detalleRodillo, detallePintura, detalleCola, detalleSilastic, detalleVidrio, detalleDiluyente, detalleMueble, detalleFlete, detalleLuz, detalleHsProducto
 var cantLijas, cantPinceles, cantRodillos, cantPintura, cantCola, cantSilastic, cantVidrio, cantDiluyente, cantMueble, cantFlete, cantLuz, cantHsTrabajo
 var precioUnLijas, precioUnPinceles, precioUnRodillos, precioUnPintura, precioUnCola, precioUnSilastic, precioUnVidrio, precioUnDiluyente, precioUnMueble, precioUnFlete, precioUnLuz, costoTotal, costoTotalMO
-var precioTotalLijas, precioTotalPinceles, precioTotalRodillos, precioTotalPintura, precioTotalCola, precioTotalSilastic, precioTotalVidrio, precioTotalDiluyente, precioTotalMueble, precioTotalFlete, precioTotalLuz, precioHora
+var precioTotalLijas, precioTotalPinceles, precioTotalRodillos, precioTotalPintura, precioTotalCola, precioTotalSilastic, precioTotalVidrio, precioTotalDiluyente, precioTotalMueble, precioTotalFlete, precioTotalLuz, precioHora, precioHoraMOOficial, precioHoraMOAyudante
 var variableOrdenamiento = "Proveedor"
 var valorOrdenamiento = "asc"
 var variableQuery = "Proveedor"
@@ -284,6 +295,7 @@ function verProductos() {
       $$("#btnListProduct").removeClass("btnVisible").addClass("btnOculto")
       $$("#cajaFiltroNombre").removeClass("btnOculto").addClass("btnVisible")
       $$("#cajaOrdenar").removeClass("btnOculto").addClass("btnVisible")
+      $$("#cajaTablaProductos").removeClass("elementoOculto").addClass("elementoVisible")
     })
     .catch(function (err) {
       console.log("Error al listar productos")
@@ -398,7 +410,6 @@ function mostrarInsumos() {
 
         //Calculo de costo total
         costoTotal = (precioUnLijas * cantLijas) + (precioUnPinceles * cantPinceles) + (precioUnRodillos * cantRodillos) + (precioUnPintura * cantPintura) + (precioUnCola * cantCola) + (precioUnSilastic * cantSilastic) + (precioUnVidrio * cantVidrio) + (precioUnDiluyente * cantDiluyente) + (precioUnMueble * cantMueble) + (precioUnFlete *  cantFlete) + (precioUnLuz * cantLuz)
-
         })
 
       
@@ -413,9 +424,8 @@ function mostrarMObra() {
   .then(function(res){
     res.forEach(function(doc){
       datos = doc.data()
-      precioHora = datos.valorH
+      precioHora = datos.valorHOF
     })
-
     costoTotalMO = precioHora * cantHsTrabajo
 
   })
@@ -423,3 +433,68 @@ function mostrarMObra() {
     console.log(err)
   
 })}
+
+//Funcion para ver precios Mano de obra
+function pricesMO (){
+  colManoDeObra.get()
+  .then(function (res){
+    valores = []
+    res.forEach(function (doc){
+      info = doc.data()
+    
+      valores.push(info.valorH)
+
+    }
+    )
+    console.log(valores);
+    precioHoraMOAyudante = valores[0]
+    precioHoraMOOficial = valores[1]
+  })
+  .catch(function (err) {console.log(err)})
+}
+
+//Función para actulizar precios de MO
+function actulizarPreciosMOOf (){
+  porcentajeActualizacionOf = $$("#porcentActualOficial").val()
+
+  precioActualizadoOf = parseInt(precioHoraMOOficial * (1 + (porcentajeActualizacionOf / 100)))
+  
+  colManoDeObra.doc("valorHOF").set({valorH: precioActualizadoOf})
+  .then(function(){
+    $$("#precioActualizadoOficial").text(precioActualizadoOf)
+    console.log("Actualizado correctamente");
+    loader()
+  })
+  .catch(function(err){
+    console.log(err);
+  });
+}
+
+//Función para actulizar precios de MO
+function actulizarPreciosMOAy (){
+  porcentajeActualizacionAy = $$("#porcentActualAyudante").val()
+
+  precioActualizadoAy = parseInt(precioHoraMOAyudante * (1 + (porcentajeActualizacionAy / 100)))
+
+  colManoDeObra.doc("valorHAY").set({valorH: precioActualizadoAy})
+  .then(function(){
+    $$("#precioActualizadoAyudante").text(precioActualizadoAy)
+    console.log("Actualizado correctamente");
+    loader()
+  })
+  .catch(function(err){
+    console.log(err);
+  });
+  
+}
+
+//Función loader para actualización
+function loader() {
+  app.dialog.preloader('Actualizando precios...');
+
+  setTimeout(function () {
+    app.dialog.close();
+    //Se pasa a la pantalla de confirmación del turno
+    mainView.router.navigate('/prices/')
+  }, 4000);
+}

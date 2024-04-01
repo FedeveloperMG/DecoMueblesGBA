@@ -1,0 +1,51 @@
+<!-- We don't need a full layout in this file because this page will be parsed with Ajax.  -->
+<div id="paginas" class="page" data-name="preciosManoObra">
+
+  <div class="page-content">
+    <div class="block">
+      <h1 id="actualizadorMOTitulo">Actualizar Precio MO</h1>
+
+      <div class="data-table">
+        <table>
+          <thead>
+            <tr>
+              <th class="label-cell">Operario</th>
+              <th class="label-cell">Precio Hora</th>
+              <th class="label-cell">Porcentaje de aumento</th>
+              <th class="label-cell"></th>
+              <th class="label-cell">Precio Actualizado</th>
+            </tr>
+          </thead>
+          <!-- ---------------------------------- - ---------------------------------- -->
+
+          <tbody id="tablaInsumos"></tbody>
+            <tr>
+              <td>Oficial</td>
+              <td id="precioHoraMOOficial"></td>
+              <td><input id="porcentActualOficial" type="number"></td>
+              <td><button id="btnActualOficial" class="button button-small button-fill">Actualizar</button></td>
+              <td id="precioActualizadoOficial"></td>
+            </tr>
+            <tr>
+              <td>Ayudante</td>
+              <td id="precioHoraMOAyudante"></td>
+              <td><input id="porcentActualAyudante" type="number"></td>
+              <td><button id="btnActualAyudante" class="button button-small button-fill">Actualizar</button></td>
+              <td id="precioActualizadoAyudante"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="cajaActualizador">
+        <div>
+          <input id="porcentActualTodos" type="number">
+        </div>
+        <div>
+          <button id="btnActualTodos" class="button button-small button-fill">Actualizar todos</button>
+        </div>
+      </div>
+      <a class="button button-small button-fill" href="/prices/">Volver</a>
+
+    </div>
+  </div>
+</div>

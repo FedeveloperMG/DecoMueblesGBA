@@ -823,6 +823,13 @@ code {
   display: none;
   visibility:hidden;
 }
+.elementoVisible{
+  visibility:visible;
+}
+.elementoOculto{
+  display: none;
+  visibility:hidden;
+}
 .cajaFiltros{
   display: flex;
   flex-direction: row;
@@ -831,4 +838,21 @@ code {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+}
+.cajaActualizador{
+  display: flex;
+  flex-direction: row;
+  margin: 30px;
+  justify-content: center;
+  align-items: center;
+}
+#porcentActualOficial{
+  border: 2px solid black
+}
+#porcentActualAyudante{
+  border: 2px solid black
+}
+#porcentActualTodos{
+  border: 2px solid black;
+  margin-right: 10px;
 }

@@ -1,16 +1,44 @@
 <!-- We don't need a full layout in this file because this page will be parsed with Ajax.  -->
 <div id="paginas" class="page" data-name="prices">
 
-    <div class="page-content">
-        <div class="block">
-            <!-- -------------------------- Pantalla de bienvenida -------------------------- -->
-            <div class="card card-outline-md demo-card-header-pic">
-                <div style="background-image:url(../www/img/banner-futbol.jpg)" valign="bottom"
-                  class="card-header"></span></div>
-                <div class="card-content card-content-padding">
-                  <h2 id="textBienvenidaDespedida">Bienvenidx <span id="userLoggedIn">!!</h2>
+  <div class="page-content">
+    <div class="block">
+      <!-- ---------------------------- Titulo página ---------------------------- -->
+      <h1 id="gestionPreciosTitulo">Gestión de precios</h1>
+      <!-- --------------------------------- -- ---------------------------------- -->
+
+      <!-- ------------------------ Tarjetas de funciones ------------------------ -->
+
+      <div class="card-content">
+          <div class="list media-list no-safe-areas">
+            <ul>
+              <a id="toListProducts" class="item-content tarjetaItem" href="/preciosInsumos/">
+                <div class="item-media"><img src="./img/vendors.png" width="44" />
                 </div>
-            </div>
+                <div class="item-inner">
+                  <div class="item-title-row">
+                    <div class="item-title">Precios Insumos</div>
+                  </div>
+                  <div class="item-subtitle">Ver y actualizar precios de insumos.</div>
+                </div>
+              </a>
+              <a class="item-content tarjetaItem" href="/preciosManoObra/">
+                <div class="item-media"><img src="./img/manoObra.png" width="44" />
+                </div>
+                <div class="item-inner">
+                  <div class="item-title-row">
+                    <div class="item-title">Precios Mano de obra</div>
+                  </div>
+                  <div class="item-subtitle">Ver y actualizar precios de insumos.</div>
+                </div>
+              </a>
+            </ul>
+          </div>
         </div>
+
+        <a class="button button-small button-fill" href="/index/">Volver</a>
+     
+    <!-- --------------------------------- Fin --------------------------------- -->
     </div>
+  </div>
 </div>
