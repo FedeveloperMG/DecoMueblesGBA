@@ -128,8 +128,12 @@ $$(document).on('page:init', '.page[data-name="preciosInsumos"]', function (e) {
 $$(document).on('page:init', '.page[data-name="preciosManoObra"]', function (e) {
   $$("#precioHoraMOOficial").text(precioHoraMOOficial)
   $$("#precioHoraMOAyudante").text(precioHoraMOAyudante)
-  $$("#btnActualOficial").on("click", actulizarPreciosMOOf)
-  $$("#btnActualAyudante").on("click", actulizarPreciosMOAy)
+
+  
+  $$("#btnActualOficial").on("click", actualizarPreciosMOOf)
+  $$("#btnActualAyudante").on("click", actualizarPreciosMOAy)
+
+  $$("#btnActualTodos").on("click", actualizarTodosPreciosMO)
 })
 
 
@@ -454,16 +458,19 @@ function pricesMO (){
 }
 
 //Función para actulizar precios de MO
-function actulizarPreciosMOOf (){
+function actualizarPreciosMOOf (porcent){
   porcentajeActualizacionOf = $$("#porcentActualOficial").val()
+  porcent = porcentajeActualizacionOf
 
-  precioActualizadoOf = parseInt(precioHoraMOOficial * (1 + (porcentajeActualizacionOf / 100)))
+  precioActualizadoOf = parseInt(precioHoraMOOficial * (1 + (porcent / 100)))
   
   colManoDeObra.doc("valorHOF").set({valorH: precioActualizadoOf})
   .then(function(){
     $$("#precioActualizadoOficial").text(precioActualizadoOf)
     console.log("Actualizado correctamente");
-    loader()
+    
+    texto = `<h3>Actualizando precio...</h3> <h5>Nuevo valor: $${precioActualizadoOf}</h5>`    
+    loader(texto)
   })
   .catch(function(err){
     console.log(err);
@@ -471,16 +478,19 @@ function actulizarPreciosMOOf (){
 }
 
 //Función para actulizar precios de MO
-function actulizarPreciosMOAy (){
+function actualizarPreciosMOAy (porcent){
   porcentajeActualizacionAy = $$("#porcentActualAyudante").val()
+  porcent = porcentajeActualizacionAy
 
-  precioActualizadoAy = parseInt(precioHoraMOAyudante * (1 + (porcentajeActualizacionAy / 100)))
+  precioActualizadoAy = parseInt(precioHoraMOAyudante * (1 + (porcent / 100)))
 
   colManoDeObra.doc("valorHAY").set({valorH: precioActualizadoAy})
   .then(function(){
     $$("#precioActualizadoAyudante").text(precioActualizadoAy)
     console.log("Actualizado correctamente");
-    loader()
+
+    texto = `<h3>Actualizando precio...</h3> <h5>Nuevo valor: $${precioActualizadoAy}</h5>`    
+    loader(texto)
   })
   .catch(function(err){
     console.log(err);
@@ -488,9 +498,37 @@ function actulizarPreciosMOAy (){
   
 }
 
+//Función para actualizar todos los precios
+function actualizarTodosPreciosMO (){
+  porcentajeTodos = $$("#porcentActualTodos").val()
+
+  precioActualizadoOf = parseInt(precioHoraMOOficial * (1 + (porcentajeTodos / 100)))
+  precioActualizadoAy = parseInt(precioHoraMOAyudante * (1 + (porcentajeTodos / 100)))
+
+  colManoDeObra.doc("valorHAY").set({valorH: precioActualizadoAy})
+  .then(function(){
+    console.log("Precio Ayudante actualizado correctamente");
+  })
+  .catch(function(err){
+    console.log(err);
+  });
+  colManoDeObra.doc("valorHOF").set({valorH: precioActualizadoOf})
+  .then(function(){
+    console.log("Precio Oficial actualizado correctamente");
+  })
+  .catch(function(err){
+    console.log(err);
+  });
+
+  texto = `<h3>Actualizando precios...</h3>`    
+  loader(texto)
+
+}
+
 //Función loader para actualización
-function loader() {
-  app.dialog.preloader('Actualizando precios...');
+function loader(texto) {
+  
+  app.dialog.preloader(texto);
 
   setTimeout(function () {
     app.dialog.close();

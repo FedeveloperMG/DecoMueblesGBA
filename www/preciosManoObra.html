@@ -3,7 +3,7 @@
 
   <div class="page-content">
     <div class="block">
-      <h1 id="actualizadorMOTitulo">Actualizar Precio MO</h1>
+      <h1 id="actualizadorMOTitulo">Actualizar precios individuales de MO</h1>
 
       <div class="data-table">
         <table>
@@ -13,7 +13,6 @@
               <th class="label-cell">Precio Hora</th>
               <th class="label-cell">Porcentaje de aumento</th>
               <th class="label-cell"></th>
-              <th class="label-cell">Precio Actualizado</th>
             </tr>
           </thead>
           <!-- ---------------------------------- - ---------------------------------- -->
@@ -24,19 +23,22 @@
               <td id="precioHoraMOOficial"></td>
               <td><input id="porcentActualOficial" type="number"></td>
               <td><button id="btnActualOficial" class="button button-small button-fill">Actualizar</button></td>
-              <td id="precioActualizadoOficial"></td>
             </tr>
             <tr>
               <td>Ayudante</td>
               <td id="precioHoraMOAyudante"></td>
               <td><input id="porcentActualAyudante" type="number"></td>
               <td><button id="btnActualAyudante" class="button button-small button-fill">Actualizar</button></td>
-              <td id="precioActualizadoAyudante"></td>
             </tr>
           </tbody>
         </table>
       </div>
+
+      <h2 id="actualizadorMOTitulo">Actualizar todos los precios de MO</h2>
       <div class="cajaActualizador">
+        <div>
+          <h3>Porcentaje de aumento</h3>
+        </div>
         <div>
           <input id="porcentActualTodos" type="number">
         </div>
