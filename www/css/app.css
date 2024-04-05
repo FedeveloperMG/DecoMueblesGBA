@@ -852,7 +852,14 @@ code {
 #porcentActualAyudante{
   border: 2px solid black
 }
-#porcentActualTodos{
+#porcentActualTodosMO{
   border: 2px solid black;
   margin: 10px;
+}
+#porcentActualTodosIn{
+  border: 2px solid black;
+  margin: 10px;
+}
+.bordesPorcentaje{
+  border: 2px solid black !important;
 }

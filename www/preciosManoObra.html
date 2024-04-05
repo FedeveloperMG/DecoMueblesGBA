@@ -17,17 +17,17 @@
           </thead>
           <!-- ---------------------------------- - ---------------------------------- -->
 
-          <tbody id="tablaInsumos"></tbody>
+          <tbody id="tablaPricesMO"></tbody>
             <tr>
               <td>Oficial</td>
               <td id="precioHoraMOOficial"></td>
-              <td><input id="porcentActualOficial" type="number"></td>
+              <td><input class="bordesPorcentaje" id="porcentActualOficial" type="number"></td>
               <td><button id="btnActualOficial" class="button button-small button-fill">Actualizar</button></td>
             </tr>
             <tr>
               <td>Ayudante</td>
               <td id="precioHoraMOAyudante"></td>
-              <td><input id="porcentActualAyudante" type="number"></td>
+              <td><input class="bordesPorcentaje" id="porcentActualAyudante" type="number"></td>
               <td><button id="btnActualAyudante" class="button button-small button-fill">Actualizar</button></td>
             </tr>
           </tbody>
@@ -40,10 +40,10 @@
           <h3>Porcentaje de aumento</h3>
         </div>
         <div>
-          <input id="porcentActualTodos" type="number">
+          <input id="porcentActualTodosMO" type="number">
         </div>
         <div>
-          <button id="btnActualTodos" class="button button-small button-fill">Actualizar todos</button>
+          <button id="btnActualTodosMO" class="button button-small button-fill">Actualizar todos</button>
         </div>
       </div>
       <a class="button button-small button-fill" href="/prices/">Volver</a>

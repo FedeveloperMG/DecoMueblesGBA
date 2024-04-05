@@ -3,92 +3,95 @@
 
   <div class="page-content">
     <div class="block">
-      <h1 id="productTitle"></h1>
+      <h1 id="actualizadorMOTitulo">Actualizar precios individuales de Insumos</h1>
 
       <div class="data-table">
         <table>
           <thead>
             <tr>
               <th class="label-cell">Insumo</th>
-              <th class="label-cell">Cantidad</th>
               <th class="label-cell">Precio Un</th>
-              <th class="label-cell">Precio Total</th>
+              <th class="label-cell">Porcentaje de aumento</th>
+              <th class="label-cell"></th>
             </tr>
           </thead>
           <!-- ---------------------------------- - ---------------------------------- -->
 
-          <tbody id="tablaInsumos"></tbody>
+          <tbody id="tablaPricesInsumos"></tbody>
             <tr>
               <td>Cola</td>
-              <td id="cantCola"></td>
-              <td id="precioUnCola"></td>
-              <td id="precioTotalCola"></td>
+              <td class="precios" id="precioUnCola"></td>
+              <td><input class="bordesPorcentaje porcentaje" id="porcentActualCola" type="number"></td>
+              <td><button id="btnActualCola" class="button button-small button-fill boton">Actualizar</button></td>
             </tr>
             <tr>
               <td>Diluyente</td>
-              <td id="cantDiluyente"></td>
-              <td id="precioUnDiluyente"></td>
-              <td id="precioTotalDiluyente"></td>
+              <td class="precios" id="precioUnDiluyente"></td>
+              <td><input class="bordesPorcentaje porcentaje" id="porcentActualDiluyente" type="number"></td>
+              <td><button id="btnActualDiluyente" class="button button-small button-fill boton">Actualizar</button></td>
             </tr>
             <tr>
               <td>Flete</td>
-              <td id="cantFlete"></td>
-              <td id="precioUnFlete"></td>
-              <td id="precioTotalFlete"></td>
+              <td class="precios" id="precioUnFlete"></td>
+              <td><input class="bordesPorcentaje porcentaje" id="porcentActualFlete" type="number"></td>
+              <td><button id="btnActualFlete" class="button button-small button-fill boton">Actualizar</button></td>
             </tr>
             <tr>
               <td>Lijas</td>
-              <td id="cantLijas"></td>
-              <td id="precioUnLijas"></td>
-              <td id="precioTotalLijas"></td>
+              <td class="precios" id="precioUnLijas"></td>
+              <td><input class="bordesPorcentaje porcentaje" id="porcentActualLijas" type="number"></td>
+              <td><button id="btnActualLijas" class="button button-small button-fill boton">Actualizar</button></td>
             </tr>
             <tr>
               <td>Luz</td>
-              <td id="cantLuz"></td>
-              <td id="precioUnLuz"></td>
-              <td id="precioTotalLuz"></td>
-            </tr>
-            <tr>
-              <td>Mueble</td>
-              <td id="cantMueble"></td>
-              <td id="precioUnMueble"></td>
-              <td id="precioTotalMueble"></td>
+              <td class="precios" id="precioUnLuz"></td>
+              <td><input class="bordesPorcentaje porcentaje" id="porcentActualLuz" type="number"></td>
+              <td><button id="btnActualLuz" class="button button-small button-fill boton">Actualizar</button></td>
             </tr>
             <tr>
               <td>Pinceles</td>
-              <td id="cantPinceles"></td>
-              <td id="precioUnPinceles"></td>
-              <td id="precioTotalPinceles"></td>
+              <td class="precios" id="precioUnPinceles"></td>
+              <td><input class="bordesPorcentaje porcentaje" id="porcentActualPinceles" type="number"></td>
+              <td><button id="btnActualPinceles" class="button button-small button-fill boton">Actualizar</button></td>
             </tr>
             <tr>
               <td> Pintura</td>
-              <td id="cantPintura"></td>
-              <td id="precioUnPintura"></td>
-              <td id="precioTotalPintura"></td>
+              <td class="precios" id="precioUnPintura"></td>
+              <td><input class="bordesPorcentaje porcentaje" id="porcentActualPintura" type="number"></td>
+              <td><button id="btnActualPintura" class="button button-small button-fill boton">Actualizar</button></td>
             </tr>
             <tr>
               <td>Rodillos</td>
-              <td id="cantRodillos"></td>
-              <td id="precioUnRodillos"></td>
-              <td id="precioTotalRodillos"></td>
+              <td class="precios" id="precioUnRodillos"></td>
+              <td><input class="bordesPorcentaje porcentaje" id="porcentActualRodillos" type="number"></td>
+              <td><button id="btnActualRodillos" class="button button-small button-fill boton">Actualizar</button></td>
             </tr>
             <tr>
               <td>Silastic</td>
-              <td id="cantSilastic"></td>
-              <td id="precioUnSilastic"></td>
-              <td id="precioTotalSilastic"></td>
+              <td class="precios" id="precioUnSilastic"></td>
+              <td><input class="bordesPorcentaje porcentaje" id="porcentActualSilastic" type="number"></td>
+              <td><button id="btnActualSilastic" class="button button-small button-fill boton">Actualizar</button></td>
             </tr>
             <tr>
               <td>Vidrio</td>
-              <td id="cantVidrio"></td>
-              <td id="precioUnVidrio"></td>
-              <td id="precioTotalVidrio"></td>
+              <td class="precios" id="precioUnVidrio"></td>
+              <td><input class="bordesPorcentaje porcentaje" id="porcentActualVidrio" type="number"></td>
+              <td><button id="btnActualVidrio" class="button button-small button-fill boton">Actualizar</button></td>
             </tr>
           </tbody>
         </table>
-        <!-- ---------------------------------- - ---------------------------------- -->
-
-        </table>
+      </div>
+      <h2 id="actualizadorInsumoTitulo">Actualizar todos los precios de Insumos</h2>
+      <div class="cajaActualizador">
+        <div>
+          <h3>Porcentaje de aumento</h3>
+        </div>
+        <div>
+          <input id="porcentActualTodosIn" type="number">
+        </div>
+        <div>
+          <button id="btnActualTodosIn" class="button button-small button-fill">Actualizar todos</button>
+        </div>
       </div>
 
       <a class="button button-small button-fill" href="/prices/">Volver</a>

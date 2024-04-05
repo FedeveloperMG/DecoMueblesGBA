@@ -38,7 +38,7 @@ $$(document).on('deviceready', function () {
 
 // Option 1. Using one 'page:init' handler for all pages
 $$(document).on('page:init', function (e) {
-  $$("#btnPrueba").on('click',mostrarInsumos)
+  $$("#btnPrueba").on('click', mostrarInsumos)
 
 })
 
@@ -59,6 +59,7 @@ $$(document).on('page:init', '.page[data-name="vendors"]', function (e) {
 })
 
 $$(document).on('page:init', '.page[data-name="prices"]', function (e) {
+  pricesInsumos()
   pricesMO()
 })
 
@@ -112,7 +113,7 @@ $$(document).on('page:init', '.page[data-name="insumos"]', function (e) {
 
   //Costo total
   $$("#insumoCostoTotal").text(costoTotal)
-  
+
 })
 $$(document).on('page:init', '.page[data-name="manoObra"]', function (e) {
   $$("#productManoDeObraTitle").text(tituloProductoDetallado);
@@ -124,16 +125,32 @@ $$(document).on('page:init', '.page[data-name="manoObra"]', function (e) {
   $$("#mOCostoTotal").text(costoTotalMO)
 })
 $$(document).on('page:init', '.page[data-name="preciosInsumos"]', function (e) {
+  //Mostrar precios Insumos
+  $$("#precioUnLijas").text(precioUnLijas);
+  $$("#precioUnPinceles").text(precioUnPinceles)
+  $$("#precioUnRodillos").text(precioUnRodillos);
+  $$("#precioUnPintura").text(precioUnPintura);
+  $$("#precioUnCola").text(precioUnCola)
+  $$("#precioUnSilastic").text(precioUnSilastic);
+  $$("#precioUnVidrio").text(precioUnVidrio);
+  $$("#precioUnDiluyente").text(precioUnDiluyente);
+  $$("#precioUnMueble").text(precioUnMueble);
+  $$("#precioUnFlete").text(precioUnFlete)
+  $$("#precioUnLuz").text(precioUnLuz);
+
+  actualizarPreciosInsumos()
+
+
 })
 $$(document).on('page:init', '.page[data-name="preciosManoObra"]', function (e) {
+  //Mostrar precios MO
   $$("#precioHoraMOOficial").text(precioHoraMOOficial)
   $$("#precioHoraMOAyudante").text(precioHoraMOAyudante)
 
-  
+  //Eventos
   $$("#btnActualOficial").on("click", actualizarPreciosMOOf)
   $$("#btnActualAyudante").on("click", actualizarPreciosMOAy)
-
-  $$("#btnActualTodos").on("click", actualizarTodosPreciosMO)
+  $$("#btnActualTodosMO").on("click", actualizarTodosPreciosMO)
 })
 
 
@@ -229,7 +246,7 @@ function añadirProducto() {
 //Función para ver lista de productos
 function verProductos() {
 
-  
+
   colProductos.orderBy(variableOrdenamiento, valorOrdenamiento).where(variableQuery, operadorQuery, valorQuery).get()
     .then(function (res) {
       res.forEach(function (doc) {
@@ -239,7 +256,7 @@ function verProductos() {
 
       // Iterar sobre el array
       for (i = 0; i < products.length; i++) {
-        
+
         // Crear nueva fila
         var nuevaFila = $$('<tr>');
 
@@ -250,41 +267,41 @@ function verProductos() {
         var celdaMedida = $$('<td>').text(`${products[i].Ancho}x${products[i].Largo}x${products[i].Ancho}`);
         var celdaStock = $$('<td>').text(products[i].Stock);
         var celdaProveedor = $$('<td>').text(products[i].Proveedor);
-        
-          btnDetalles = $$(`<input id="${i}" type="button" value="+" class="button button-small button-round button-fill color-green">`)
-          btnDetalles.data("valorId", `${i}`)
-          btnDetalles.on("click", function () {
-            var dataId = $$(this).data("valorId")
 
-            tituloProductoDetallado = `${products[dataId].Nombre}-${products[dataId].Tipo}`
-            tituloInsumos = `${products[dataId].Nombre}-${products[dataId].Tipo}`
-            mostrarMObra()
+        btnDetalles = $$(`<input id="${i}" type="button" value="+" class="button button-small button-round button-fill color-green">`)
+        btnDetalles.data("valorId", `${i}`)
+        btnDetalles.on("click", function () {
+          var dataId = $$(this).data("valorId")
+
+          tituloProductoDetallado = `${products[dataId].Nombre}-${products[dataId].Tipo}`
+          tituloInsumos = `${products[dataId].Nombre}-${products[dataId].Tipo}`
+          mostrarMObra()
 
 
           //Variables del producto seleccionado
-           cantLijas = `${products[dataId].Lijas}`
-           cantPinceles = `${products[dataId].Pinceles}`
-           cantRodillos = `${products[dataId].Rodillos}`
-           cantPintura = `${products[dataId].Pintura}`
-           cantCola = `${products[dataId].Cola}`
-           cantSilastic = `${products[dataId].Silastic}`
-           cantVidrio = `${products[dataId].Vidrios}`
-           cantDiluyente = `${products[dataId].Diluyente}`
-           cantMueble = `${products[dataId].Mueble}`
-           cantFlete = `${products[dataId].Flete}`
-           cantLuz = `${products[dataId].Luz}`
-           cantHsTrabajo = `${products[dataId].Hstrabajo}`
-           
+          cantLijas = `${products[dataId].Lijas}`
+          cantPinceles = `${products[dataId].Pinceles}`
+          cantRodillos = `${products[dataId].Rodillos}`
+          cantPintura = `${products[dataId].Pintura}`
+          cantCola = `${products[dataId].Cola}`
+          cantSilastic = `${products[dataId].Silastic}`
+          cantVidrio = `${products[dataId].Vidrios}`
+          cantDiluyente = `${products[dataId].Diluyente}`
+          cantMueble = `${products[dataId].Mueble}`
+          cantFlete = `${products[dataId].Flete}`
+          cantLuz = `${products[dataId].Luz}`
+          cantHsTrabajo = `${products[dataId].Hstrabajo}`
 
-           //Función para mostrar precios
-           mostrarInsumos()
-           
-           // Agregar celdas a la fila
-           mainView.router.navigate("/detailsProduct/")
 
-          })
+          //Función para mostrar precios
+          mostrarInsumos()
 
-        
+          // Agregar celdas a la fila
+          mainView.router.navigate("/detailsProduct/")
+
+        })
+
+
         var celdaDetalles = $$('<td>').append(btnDetalles);
 
         // Agregar celdas a la fila
@@ -326,7 +343,7 @@ function filtrarNombre() {
     valorQuery = nombreModificado
     operadorQuery = "=="
     verProductos()
-  }else if(nombreModificado.length == 0){
+  } else if (nombreModificado.length == 0) {
     variableOrdenamiento = "Proveedor"
     valorOrdenamiento = "asc"
     variableQuery = "Proveedor"
@@ -337,8 +354,8 @@ function filtrarNombre() {
 }
 
 //Función para ordenar lista
-function orderBy(){
-  
+function orderBy() {
+
   $$("#tableProducts").html("")
   products = []
   orderValue = $$("#ordenBy").val()
@@ -349,13 +366,13 @@ function orderBy(){
     variableQuery = "PrecioFinal"
     operadorQuery = "!="
     valorQuery = "-"
-  }else if (orderValue == "PrecioMayMen") {
+  } else if (orderValue == "PrecioMayMen") {
     variableOrdenamiento = "PrecioFinal"
     valorOrdenamiento = "desc"
     variableQuery = "PrecioFinal"
     operadorQuery = "!="
     valorQuery = "-"
-  }else if (orderValue == "Proveedor"){
+  } else if (orderValue == "Proveedor") {
     variableOrdenamiento = "Proveedor"
     valorOrdenamiento = "asc"
     variableQuery = "Proveedor"
@@ -377,157 +394,158 @@ function mostrarInsumos() {
     stock: 10
   }
 
-    colInsumos.orderBy("nombre").get()
-      .then(function (res) {
-        res.forEach(function (doc){
-          
-          info = doc.data()
-          
-          insumos.push(info.precio)
+  colInsumos.orderBy("nombre").get()
+    .then(function (res) {
+      res.forEach(function (doc) {
 
-        })
-        
-        //Precios de insumos
-        precioUnCola = `${insumos[0]}`
-        precioUnDiluyente = `${insumos[1]}`
-        precioUnFlete = `${insumos[2]}`
-        precioUnLijas = `${insumos[3]}`
-        precioUnLuz = `${insumos[4]}`
-        precioUnMueble = `${insumos[5]}`
-        precioUnPinceles = `${insumos[6]}`
-        precioUnPintura = `${insumos[7]}`
-        precioUnRodillos = `${insumos[8]}`
-        precioUnSilastic = `${insumos[9]}`
-        precioUnVidrio = `${insumos[10]}`
-        //Precios de insumos
-        precioTotalCola = (precioUnCola * cantCola)
-        precioTotalDiluyente = (precioUnDiluyente * cantDiluyente)
-        precioTotalFlete = (precioUnFlete *  cantFlete)
-        precioTotalLijas = (precioUnLijas * cantLijas)
-        precioTotalLuz = (precioUnLuz * cantLuz)
-        precioTotalMueble = (precioUnMueble * cantMueble)
-        precioTotalPinceles = (precioUnPinceles * cantPinceles)
-        precioTotalPintura = (precioUnPintura * cantPintura)
-        precioTotalRodillos = (precioUnRodillos * cantRodillos)
-        precioTotalSilastic = (precioUnSilastic * cantSilastic)
-        precioTotalVidrio = (precioUnVidrio * cantVidrio)
+        info = doc.data()
 
-        //Calculo de costo total
-        costoTotal = (precioUnLijas * cantLijas) + (precioUnPinceles * cantPinceles) + (precioUnRodillos * cantRodillos) + (precioUnPintura * cantPintura) + (precioUnCola * cantCola) + (precioUnSilastic * cantSilastic) + (precioUnVidrio * cantVidrio) + (precioUnDiluyente * cantDiluyente) + (precioUnMueble * cantMueble) + (precioUnFlete *  cantFlete) + (precioUnLuz * cantLuz)
-        })
+        insumos.push(info.precio)
 
-      
-      .catch(function (err) {
-        console.log("Error")
       })
+
+      //Precios de insumos
+      precioUnCola = `${insumos[0]}`
+      precioUnDiluyente = `${insumos[1]}`
+      precioUnFlete = `${insumos[2]}`
+      precioUnLijas = `${insumos[3]}`
+      precioUnLuz = `${insumos[4]}`
+      precioUnMueble = `${insumos[5]}`
+      precioUnPinceles = `${insumos[6]}`
+      precioUnPintura = `${insumos[7]}`
+      precioUnRodillos = `${insumos[8]}`
+      precioUnSilastic = `${insumos[9]}`
+      precioUnVidrio = `${insumos[10]}`
+      //Precios de insumos
+      precioTotalCola = (precioUnCola * cantCola)
+      precioTotalDiluyente = (precioUnDiluyente * cantDiluyente)
+      precioTotalFlete = (precioUnFlete * cantFlete)
+      precioTotalLijas = (precioUnLijas * cantLijas)
+      precioTotalLuz = (precioUnLuz * cantLuz)
+      precioTotalMueble = (precioUnMueble * cantMueble)
+      precioTotalPinceles = (precioUnPinceles * cantPinceles)
+      precioTotalPintura = (precioUnPintura * cantPintura)
+      precioTotalRodillos = (precioUnRodillos * cantRodillos)
+      precioTotalSilastic = (precioUnSilastic * cantSilastic)
+      precioTotalVidrio = (precioUnVidrio * cantVidrio)
+
+      //Calculo de costo total
+      costoTotal = (precioUnLijas * cantLijas) + (precioUnPinceles * cantPinceles) + (precioUnRodillos * cantRodillos) + (precioUnPintura * cantPintura) + (precioUnCola * cantCola) + (precioUnSilastic * cantSilastic) + (precioUnVidrio * cantVidrio) + (precioUnDiluyente * cantDiluyente) + (precioUnMueble * cantMueble) + (precioUnFlete * cantFlete) + (precioUnLuz * cantLuz)
+    })
+
+
+    .catch(function (err) {
+      console.log("Error")
+    })
 
 }
 
 function mostrarMObra() {
   colManoDeObra.get()
-  .then(function(res){
-    res.forEach(function(doc){
-      datos = doc.data()
-      precioHora = datos.valorHOF
-    })
-    costoTotalMO = precioHora * cantHsTrabajo
+    .then(function (res) {
+      res.forEach(function (doc) {
+        datos = doc.data()
+        precioHora = datos.valorHOF
+      })
+      costoTotalMO = precioHora * cantHsTrabajo
 
-  })
-  .catch(function (err) {
-    console.log(err)
-  
-})}
+    })
+    .catch(function (err) {
+      console.log(err)
+
+    })
+}
 
 //Funcion para ver precios Mano de obra
-function pricesMO (){
+function pricesMO() {
   colManoDeObra.get()
-  .then(function (res){
-    valores = []
-    res.forEach(function (doc){
-      info = doc.data()
-    
-      valores.push(info.valorH)
+    .then(function (res) {
+      valores = []
+      res.forEach(function (doc) {
+        info = doc.data()
 
-    }
-    )
-    console.log(valores);
-    precioHoraMOAyudante = valores[0]
-    precioHoraMOOficial = valores[1]
-  })
-  .catch(function (err) {console.log(err)})
+        valores.push(info.valorH)
+
+      }
+      )
+      console.log(valores);
+      precioHoraMOAyudante = valores[0]
+      precioHoraMOOficial = valores[1]
+    })
+    .catch(function (err) { console.log(err) })
 }
 
 //Función para actulizar precios de MO
-function actualizarPreciosMOOf (porcent){
+function actualizarPreciosMOOf(porcent) {
   porcentajeActualizacionOf = $$("#porcentActualOficial").val()
   porcent = porcentajeActualizacionOf
 
   precioActualizadoOf = parseInt(precioHoraMOOficial * (1 + (porcent / 100)))
-  
-  colManoDeObra.doc("valorHOF").set({valorH: precioActualizadoOf})
-  .then(function(){
-    $$("#precioActualizadoOficial").text(precioActualizadoOf)
-    console.log("Actualizado correctamente");
-    
-    texto = `<h3>Actualizando precio...</h3> <h5>Nuevo valor: $${precioActualizadoOf}</h5>`    
-    loader(texto)
-  })
-  .catch(function(err){
-    console.log(err);
-  });
+
+  colManoDeObra.doc("valorHOF").set({ valorH: precioActualizadoOf })
+    .then(function () {
+      $$("#precioActualizadoOficial").text(precioActualizadoOf)
+      console.log("Actualizado correctamente");
+
+      texto = `<h3>Actualizando precio...</h3> <h5>Nuevo valor: $${precioActualizadoOf}</h5>`
+      loader(texto)
+    })
+    .catch(function (err) {
+      console.log(err);
+    });
 }
 
 //Función para actulizar precios de MO
-function actualizarPreciosMOAy (porcent){
+function actualizarPreciosMOAy(porcent) {
   porcentajeActualizacionAy = $$("#porcentActualAyudante").val()
   porcent = porcentajeActualizacionAy
 
   precioActualizadoAy = parseInt(precioHoraMOAyudante * (1 + (porcent / 100)))
 
-  colManoDeObra.doc("valorHAY").set({valorH: precioActualizadoAy})
-  .then(function(){
-    $$("#precioActualizadoAyudante").text(precioActualizadoAy)
-    console.log("Actualizado correctamente");
+  colManoDeObra.doc("valorHAY").set({ valorH: precioActualizadoAy })
+    .then(function () {
+      $$("#precioActualizadoAyudante").text(precioActualizadoAy)
+      console.log("Actualizado correctamente");
 
-    texto = `<h3>Actualizando precio...</h3> <h5>Nuevo valor: $${precioActualizadoAy}</h5>`    
-    loader(texto)
-  })
-  .catch(function(err){
-    console.log(err);
-  });
-  
+      texto = `<h3>Actualizando precio...</h3> <h5>Nuevo valor: $${precioActualizadoAy}</h5>`
+      loader(texto)
+    })
+    .catch(function (err) {
+      console.log(err);
+    });
+
 }
 
 //Función para actualizar todos los precios
-function actualizarTodosPreciosMO (){
-  porcentajeTodos = $$("#porcentActualTodos").val()
+function actualizarTodosPreciosMO() {
+  porcentajeTodos = $$("#porcentActualTodosMO").val()
 
   precioActualizadoOf = parseInt(precioHoraMOOficial * (1 + (porcentajeTodos / 100)))
   precioActualizadoAy = parseInt(precioHoraMOAyudante * (1 + (porcentajeTodos / 100)))
 
-  colManoDeObra.doc("valorHAY").set({valorH: precioActualizadoAy})
-  .then(function(){
-    console.log("Precio Ayudante actualizado correctamente");
-  })
-  .catch(function(err){
-    console.log(err);
-  });
-  colManoDeObra.doc("valorHOF").set({valorH: precioActualizadoOf})
-  .then(function(){
-    console.log("Precio Oficial actualizado correctamente");
-  })
-  .catch(function(err){
-    console.log(err);
-  });
+  colManoDeObra.doc("valorHAY").update({ valorH: precioActualizadoAy })
+    .then(function () {
+      console.log("Precio Ayudante actualizado correctamente");
+    })
+    .catch(function (err) {
+      console.log(err);
+    });
+  colManoDeObra.doc("valorHOF").update({ valorH: precioActualizadoOf })
+    .then(function () {
+      console.log("Precio Oficial actualizado correctamente");
+    })
+    .catch(function (err) {
+      console.log(err);
+    });
 
-  texto = `<h3>Actualizando precios...</h3>`    
+  texto = `<h3>Actualizando precios...</h3>`
   loader(texto)
 
 }
 
 //Función loader para actualización
 function loader(texto) {
-  
+
   app.dialog.preloader(texto);
 
   setTimeout(function () {
@@ -535,4 +553,81 @@ function loader(texto) {
     //Se pasa a la pantalla de confirmación del turno
     mainView.router.navigate('/prices/')
   }, 4000);
+}
+
+//Funcion para ver precios de insumos
+var preciosInsumos
+function pricesInsumos() {
+
+  colInsumos.orderBy("nombre").get()
+    .then(function (res) {
+      preciosInsumos = []
+      console.log(preciosInsumos);
+      res.forEach(function (doc) {
+
+        info = doc.data()
+
+        preciosInsumos.push(info.precio)
+
+      })
+      //Precios de insumos
+      precioUnCola = `${preciosInsumos[0]}`
+      precioUnDiluyente = `${preciosInsumos[1]}`
+      precioUnFlete = `${preciosInsumos[2]}`
+      precioUnLijas = `${preciosInsumos[3]}`
+      precioUnLuz = `${preciosInsumos[4]}`
+      precioUnPinceles = `${preciosInsumos[5]}`
+      precioUnPintura = `${preciosInsumos[6]}`
+      precioUnRodillos = `${preciosInsumos[7]}`
+      precioUnSilastic = `${preciosInsumos[8]}`
+      precioUnVidrio = `${preciosInsumos[9]}`
+
+      console.log(preciosInsumos);
+    })
+    .catch(function (err) { console.log(err); })
+}
+
+//Función para actulizar precios de insumos
+function actualizarPreciosInsumos() {
+
+
+  botones = document.querySelectorAll('.boton');
+  inputs = document.querySelectorAll('.porcentaje');
+  precios = document.querySelectorAll('.precios');
+
+  botones.forEach(function (boton, index) {
+    boton.addEventListener('click', function () {
+      valorPorcentaje = parseInt(inputs[index].value);
+
+      resultado = parseInt(preciosInsumos[index] * (1 + (valorPorcentaje / 100)))
+      console.log(resultado);
+
+      colInsumos.orderBy("nombre").get()
+        .then(function (res) {
+          nombres = []
+          ids = []
+          res.forEach(function (doc) {
+            info = doc.data()
+            ids.push(doc.id);
+            nombres.push(info.nombre)
+          })
+
+          insumoActualizado = nombres[index]
+
+          valorId = ids[index]
+          console.log(valorId);
+
+          colInsumos.doc(valorId).update({ precio: resultado })
+            .then(function (res) {
+              console.log(`Valor de ${insumoActualizado} actualizado correctamente`);
+              texto = `<h3>Actualizando precio...</h3> <h5>Nuevo valor: $${resultado}</h5>`
+              loader(texto)
+            })
+            .catch(function (err) { console.log(err); })
+        })
+          .catch(function (err) { console.log(err); })
+
+    });
+  });
+
 }
