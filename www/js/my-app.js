@@ -38,7 +38,6 @@ $$(document).on('deviceready', function () {
 
 // Option 1. Using one 'page:init' handler for all pages
 $$(document).on('page:init', function (e) {
-  $$("#btnPrueba").on('click', mostrarInsumos)
 
 })
 
@@ -61,6 +60,7 @@ $$(document).on('page:init', '.page[data-name="vendors"]', function (e) {
 $$(document).on('page:init', '.page[data-name="prices"]', function (e) {
   pricesInsumos()
   pricesMO()
+  $$("#toListInsumos").on('click', toListPreciosIn)
 })
 
 $$(document).on('page:init', '.page[data-name="fliers"]', function (e) {
@@ -139,6 +139,7 @@ $$(document).on('page:init', '.page[data-name="preciosInsumos"]', function (e) {
   $$("#precioUnLuz").text(precioUnLuz);
 
   actualizarPreciosInsumos()
+  $$("#btnActualTodosIn").on("click", actualizarTodosLosInsumos)
 
 
 })
@@ -249,8 +250,11 @@ function verProductos() {
 
   colProductos.orderBy(variableOrdenamiento, valorOrdenamiento).where(variableQuery, operadorQuery, valorQuery).get()
     .then(function (res) {
+      products = []
       res.forEach(function (doc) {
+
         info = doc.data()
+
         products.push(info);
       });
 
@@ -276,9 +280,10 @@ function verProductos() {
           tituloProductoDetallado = `${products[dataId].Nombre}-${products[dataId].Tipo}`
           tituloInsumos = `${products[dataId].Nombre}-${products[dataId].Tipo}`
           mostrarMObra()
-
-
+          
+          
           //Variables del producto seleccionado
+          precioUnMueble = products[dataId].PrecioMueble
           cantLijas = `${products[dataId].Lijas}`
           cantPinceles = `${products[dataId].Pinceles}`
           cantRodillos = `${products[dataId].Rodillos}`
@@ -300,7 +305,6 @@ function verProductos() {
           mainView.router.navigate("/detailsProduct/")
 
         })
-
 
         var celdaDetalles = $$('<td>').append(btnDetalles);
 
@@ -388,20 +392,11 @@ function mostrarInsumos() {
 
   insumos = []
 
-  insumo = {
-    nombre: "Luz",
-    precio: 100,
-    stock: 10
-  }
-
   colInsumos.orderBy("nombre").get()
     .then(function (res) {
       res.forEach(function (doc) {
-
         info = doc.data()
-
         insumos.push(info.precio)
-
       })
 
       //Precios de insumos
@@ -410,12 +405,12 @@ function mostrarInsumos() {
       precioUnFlete = `${insumos[2]}`
       precioUnLijas = `${insumos[3]}`
       precioUnLuz = `${insumos[4]}`
-      precioUnMueble = `${insumos[5]}`
-      precioUnPinceles = `${insumos[6]}`
-      precioUnPintura = `${insumos[7]}`
-      precioUnRodillos = `${insumos[8]}`
-      precioUnSilastic = `${insumos[9]}`
-      precioUnVidrio = `${insumos[10]}`
+      precioUnPinceles = `${insumos[5]}`
+      precioUnPintura = `${insumos[6]}`
+      precioUnRodillos = `${insumos[7]}`
+      precioUnSilastic = `${insumos[8]}`
+      precioUnVidrio = `${insumos[9]}`
+
       //Precios de insumos
       precioTotalCola = (precioUnCola * cantCola)
       precioTotalDiluyente = (precioUnDiluyente * cantDiluyente)
@@ -443,11 +438,19 @@ function mostrarInsumos() {
 function mostrarMObra() {
   colManoDeObra.get()
     .then(function (res) {
+      valoresH = []
+
       res.forEach(function (doc) {
-        datos = doc.data()
+        datos = doc.data();
+
+        valoresH.push(datos.valorH)
+
         precioHora = datos.valorHOF
       })
+      
+      precioHora = parseInt(valoresH[0] + valoresH[1])
       costoTotalMO = precioHora * cantHsTrabajo
+
 
     })
     .catch(function (err) {
@@ -543,6 +546,13 @@ function actualizarTodosPreciosMO() {
 
 }
 
+//Función para espera de carga de datos
+function toListPreciosIn (){
+  setTimeout(function(){
+    mainView.router.navigate('/preciosInsumos/')
+},1000)
+}
+
 //Función loader para actualización
 function loader(texto) {
 
@@ -562,7 +572,7 @@ function pricesInsumos() {
   colInsumos.orderBy("nombre").get()
     .then(function (res) {
       preciosInsumos = []
-      console.log(preciosInsumos);
+
       res.forEach(function (doc) {
 
         info = doc.data()
@@ -600,7 +610,6 @@ function actualizarPreciosInsumos() {
       valorPorcentaje = parseInt(inputs[index].value);
 
       resultado = parseInt(preciosInsumos[index] * (1 + (valorPorcentaje / 100)))
-      console.log(resultado);
 
       colInsumos.orderBy("nombre").get()
         .then(function (res) {
@@ -615,7 +624,6 @@ function actualizarPreciosInsumos() {
           insumoActualizado = nombres[index]
 
           valorId = ids[index]
-          console.log(valorId);
 
           colInsumos.doc(valorId).update({ precio: resultado })
             .then(function (res) {
@@ -629,5 +637,40 @@ function actualizarPreciosInsumos() {
 
     });
   });
+}
 
+//Actualizar todos los precios de insumos
+function actualizarTodosLosInsumos (){
+
+  porcentaje = $$("#porcentActualTodosIn").val()
+
+  colInsumos.orderBy("nombre").get()
+    .then(function(res){
+      precios = []
+      ids = []
+      res.forEach(function(doc){
+        info = doc.data()
+        id = doc.id
+        precio = info.precio
+
+        //Operación
+        resultado = parseInt(precio * (1 + (porcentaje / 100)))
+
+        ids.push(id)
+        precios.push(resultado)
+
+      })
+
+      for (i = 0; i < ids.length; i++) {
+        colInsumos.doc(ids[i]).update({ precio: precios[i]})
+          .then(function(res){
+            console.log("Todos los precios actualizados correctamente");
+            texto = `<h3>Actualizando precios...</h3>`
+            loader(texto)
+          })
+          .catch(function(err){console.log(err);})
+      }
+
+    })
+    .catch(function(err){console.log(err);})
 }
