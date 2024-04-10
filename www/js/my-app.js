@@ -34,11 +34,11 @@ var mainView = app.views.create('.view-main');
 // Handle Cordova Device Ready Event
 $$(document).on('deviceready', function () {
   console.log("Device is ready!");
+
 });
 
 // Option 1. Using one 'page:init' handler for all pages
 $$(document).on('page:init', function (e) {
-
 })
 
 $$(document).on('page:init', '.page[data-name="index"]', function (e) {
@@ -55,6 +55,7 @@ $$(document).on('page:init', '.page[data-name="newProduct"]', function (e) {
 })
 
 $$(document).on('page:init', '.page[data-name="vendors"]', function (e) {
+  actualizarProveedores()
 })
 
 $$(document).on('page:init', '.page[data-name="prices"]', function (e) {
@@ -597,9 +598,8 @@ function pricesInsumos() {
     .catch(function (err) { console.log(err); })
 }
 
-//Función para actulizar precios de insumos
+//Función para actualizar precios de insumos
 function actualizarPreciosInsumos() {
-
 
   botones = document.querySelectorAll('.boton');
   inputs = document.querySelectorAll('.porcentaje');
@@ -674,3 +674,49 @@ function actualizarTodosLosInsumos (){
     })
     .catch(function(err){console.log(err);})
 }
+
+//Ver y actualizar proveedores
+function actualizarProveedores (){
+
+  botones = document.querySelectorAll('.botonActProv');
+  inputs = document.querySelectorAll('.porcentajeProv');
+
+  botones.forEach(function (boton, index) {
+    boton.addEventListener('click', function () {
+
+      console.log(boton.id, index, inputs[index].value);
+      
+
+      colProductos.where("Proveedor","==",boton.id).get()
+        .then(function (res) {
+          preciosProveedores = []
+          res.forEach(function (doc) {
+            info = doc.data()
+            id = doc.id
+            preciosProveedores.push({id: id, price: info.PrecioMueble})
+          })
+          
+          console.log(preciosProveedores);
+          for (i = 0; i < preciosProveedores.length; i++) {
+            valor = preciosProveedores[i].price
+            porcentajeDeActual = inputs[index].value
+
+            precioActualizado = parseInt(valor * (1 + (porcentajeDeActual / 100)))
+
+            console.log(precioActualizado);
+             
+            
+            colProductos.doc(preciosProveedores[i].id).update({PrecioMueble: precioActualizado})
+              .then(function (res) {
+                console.log("Precio actualizado correctamente")
+              })
+              .catch(function (err) { console.log(err); })
+              
+            }
+
+        })
+        .catch(function (err) { console.log(err); })
+      })})
+
+}
+

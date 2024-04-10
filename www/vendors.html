@@ -1,16 +1,60 @@
 <!-- We don't need a full layout in this file because this page will be parsed with Ajax.  -->
 <div id="paginas" class="page" data-name="vendors">
 
-    <div class="page-content">
-        <div class="block">
-            <!-- -------------------------- Pantalla de bienvenida -------------------------- -->
-            <div class="card card-outline-md demo-card-header-pic">
-                <div style="background-image:url(../www/img/banner-futbol.jpg)" valign="bottom"
-                  class="card-header"></span></div>
-                <div class="card-content card-content-padding">
-                  <h2 id="textBienvenidaDespedida">Bienvenidx <span id="userLoggedIn">!!</h2>
-                </div>
-            </div>
+  <div class="page-content">
+    <div class="block">
+      <h1 id="actualizadorVendorsTitulo">Actualizar precios de proveedores</h1>
+
+      <div class="data-table">
+        <table>
+          <thead>
+            <tr>
+              <th class="label-cell">Proveedor</th>
+              <th class="label-cell">Porcentaje de aumento</th>
+              <th class="label-cell"></th>
+            </tr>
+          </thead>
+          <!-- ---------------------------------- - ---------------------------------- -->
+
+          <tbody id="tablaPricesProveedor"></tbody>
+            <tr>
+              <td>Proveedor 1</td>
+              <td><input class="bordesPorcentaje porcentajeProv" id="porcentActualProveedor1" type="number"></td>
+              <td><button id="Proveedor1" class="button button-small button-fill botonActProv">Actualizar</button></td>
+            </tr>
+            <tr>
+              <td>Proveedor 2</td>
+              <td><input class="bordesPorcentaje porcentajeProv" id="porcentActualProveedor2" type="number"></td>
+              <td><button id="Proveedor2" class="button button-small button-fill botonActProv">Actualizar</button></td>
+            </tr>
+            <tr>
+              <td>Proveedor 3</td>
+              <td><input class="bordesPorcentaje porcentajeProv" id="porcentActualProveedor3" type="number"></td>
+              <td><button id="Proveedor3" class="button button-small button-fill botonActProv">Actualizar</button></td>
+            </tr>
+            <tr>
+              <td>Proveedor 4</td>
+              <td><input class="bordesPorcentaje porcentajeProv" id="porcentActualProveedor4" type="number"></td>
+              <td><button id="Proveedor4" class="button button-small button-fill botonActProv">Actualizar</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2 id="actualizadorTodosProveedores">Actualizar todos los proveedores</h2>
+      <div class="cajaActualizador">
+        <div>
+          <h3>Porcentaje de aumento</h3>
         </div>
+        <div>
+          <input class="bordesPorcentaje" id="porcentActualTodosProveedores" type="number">
+        </div>
+        <div>
+          <button id="btnActualTodosProveedores" class="button button-small button-fill">Actualizar todos</button>
+        </div>
+      </div>
+      <a class="button button-small button-fill" href="/index/">Volver</a>
+
     </div>
+  </div>
 </div>
