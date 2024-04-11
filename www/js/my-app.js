@@ -56,6 +56,7 @@ $$(document).on('page:init', '.page[data-name="newProduct"]', function (e) {
 
 $$(document).on('page:init', '.page[data-name="vendors"]', function (e) {
   actualizarProveedores()
+  $$("#btnActualTodosProveedores").on('click',actualizarTodosLosProveedores)
 })
 
 $$(document).on('page:init', '.page[data-name="prices"]', function (e) {
@@ -492,7 +493,8 @@ function actualizarPreciosMOOf(porcent) {
       console.log("Actualizado correctamente");
 
       texto = `<h3>Actualizando precio...</h3> <h5>Nuevo valor: $${precioActualizadoOf}</h5>`
-      loader(texto)
+      pantalla = '/prices/'
+      loader(texto, pantalla)
     })
     .catch(function (err) {
       console.log(err);
@@ -512,7 +514,8 @@ function actualizarPreciosMOAy(porcent) {
       console.log("Actualizado correctamente");
 
       texto = `<h3>Actualizando precio...</h3> <h5>Nuevo valor: $${precioActualizadoAy}</h5>`
-      loader(texto)
+      pantalla = '/prices/'
+      loader(texto, pantalla)
     })
     .catch(function (err) {
       console.log(err);
@@ -543,7 +546,8 @@ function actualizarTodosPreciosMO() {
     });
 
   texto = `<h3>Actualizando precios...</h3>`
-  loader(texto)
+  pantalla = '/prices/'
+  loader(texto, pantalla)
 
 }
 
@@ -555,14 +559,14 @@ function toListPreciosIn (){
 }
 
 //Función loader para actualización
-function loader(texto) {
+function loader(texto, pantalla) {
 
   app.dialog.preloader(texto);
 
   setTimeout(function () {
     app.dialog.close();
     //Se pasa a la pantalla de confirmación del turno
-    mainView.router.navigate('/prices/')
+    mainView.router.navigate(pantalla)
   }, 4000);
 }
 
@@ -629,7 +633,8 @@ function actualizarPreciosInsumos() {
             .then(function (res) {
               console.log(`Valor de ${insumoActualizado} actualizado correctamente`);
               texto = `<h3>Actualizando precio...</h3> <h5>Nuevo valor: $${resultado}</h5>`
-              loader(texto)
+              pantalla = '/prices/'
+              loader(texto, pantalla)
             })
             .catch(function (err) { console.log(err); })
         })
@@ -666,7 +671,8 @@ function actualizarTodosLosInsumos (){
           .then(function(res){
             console.log("Todos los precios actualizados correctamente");
             texto = `<h3>Actualizando precios...</h3>`
-            loader(texto)
+            pantalla = '/prices/'
+            loader(texto, pantalla)
           })
           .catch(function(err){console.log(err);})
       }
@@ -675,7 +681,7 @@ function actualizarTodosLosInsumos (){
     .catch(function(err){console.log(err);})
 }
 
-//Ver y actualizar proveedores
+//Ver y actualizar proveedores individualmente
 function actualizarProveedores (){
 
   botones = document.querySelectorAll('.botonActProv');
@@ -713,10 +719,43 @@ function actualizarProveedores (){
               .catch(function (err) { console.log(err); })
               
             }
-
+            texto = `<h3>Actualizando precios del proveedor seleccionado...</h3>`
+            pantalla = '/index/'
+            loader(texto, pantalla)
         })
         .catch(function (err) { console.log(err); })
       })})
 
 }
 
+//Ver y actualizar todos los proveedores
+function actualizarTodosLosProveedores (){
+  porcentajeTodos = $$("#porcentActualTodosProveedores").val()
+
+  colProductos.orderBy("Proveedor").get()
+  .then(function(res){
+
+    idsValores = []
+    res.forEach(function(doc){
+      id = doc.id
+      info = doc.data()
+      valor = info.PrecioMueble
+
+      precioActualizado = parseInt(valor * (1 + (porcentajeTodos / 100)))
+      idsValores.push({id: id, precio: precioActualizado})
+      
+    })
+    console.log(idsValores);
+    for (i = 0; i < idsValores.length; i++) {
+      colProductos.doc(idsValores[i].id).update({PrecioMueble: idsValores[i].precio})
+      .then(function(res){ console.log("Todos los precios actualizados");})
+      .catch(function(err){console.log(err);})
+    }
+    texto = `<h3>Actualizando precios de todos proveedores...</h3>`
+    pantalla = '/index/'
+    loader(texto, pantalla)
+
+  })
+  .catch(function(err){console.log(err);})
+  
+}

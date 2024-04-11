@@ -863,3 +863,6 @@ code {
 .bordesPorcentaje{
   border: 2px solid black !important;
 }
+#porcentActualTodosProveedores{
+  margin: 10px;
+}
