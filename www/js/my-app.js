@@ -35,14 +35,17 @@ var mainView = app.views.create('.view-main');
 $$(document).on('deviceready', function () {
   console.log("Device is ready!");
 
+
 });
 
 // Option 1. Using one 'page:init' handler for all pages
 $$(document).on('page:init', function (e) {
+  $$("#btnPrueba").on('click', guardarPrecioFinal)
 })
 
 $$(document).on('page:init', '.page[data-name="index"]', function (e) {
   $$("#toListProducts").on('click', toListProducts)
+
 })
 
 $$(document).on('page:init', '.page[data-name="products"]', function (e) {
@@ -52,11 +55,12 @@ $$(document).on('page:init', '.page[data-name="products"]', function (e) {
 })
 $$(document).on('page:init', '.page[data-name="newProduct"]', function (e) {
   $$("#btnAddProducto").on('click', añadirProducto)
+  $$("#volverNewProduct").on('click', resetFiltros)
 })
 
 $$(document).on('page:init', '.page[data-name="vendors"]', function (e) {
   actualizarProveedores()
-  $$("#btnActualTodosProveedores").on('click',actualizarTodosLosProveedores)
+  $$("#btnActualTodosProveedores").on('click', actualizarTodosLosProveedores)
 })
 
 $$(document).on('page:init', '.page[data-name="prices"]', function (e) {
@@ -70,6 +74,7 @@ $$(document).on('page:init', '.page[data-name="fliers"]', function (e) {
 
 $$(document).on('page:init', '.page[data-name="detailsProduct"]', function (e) {
   $$("#detailsProductTitle").text(tituloProductoDetallado);
+  $$("#volverDetailProducts").on('click',resetFiltros)
 
 })
 
@@ -183,82 +188,153 @@ var valorQuery = "-"
 //Función para añadir productos a db
 function añadirProducto() {
 
-  //Inputs
-  nombre = $$("#newPNombre").val()
-  tipo = $$("#newPTipo").val()
-  color = $$("#newPColor").val()
-  ancho = $$("#newPAncho").val()
-  alto = $$("#newPAlto").val()
-  largo = $$("#newPLargo").val()
-  stock = $$("#newPStock").val()
-  vidrios = $$("#newPVidrios").val()
-  hsTrabajo = $$("#newPHsTrabajo").val()
-  lijas = $$("#newPLijas").val()
-  pinceles = $$("#newPPinceles").val()
-  rodillos = $$("#newPRodillos").val()
-  luz = $$("#newPLuz").val()
-  pintura = $$("#newPPintura").val()
-  cola = $$("#newPCola").val()
-  silastic = $$("#newPSilastic").val()
-  diluyente = $$("#newPDiluyente").val()
-  flete = $$("#newPFlete").val()
-  mueble = $$("#newPMueble").val()
-  proveedor = $$("#newPProveedor").val()
+  var insumos = []
 
-  producto =
-  {
-    Nombre: nombre,
-    Tipo: tipo,
-    Color: color,
-    Ancho: ancho,
-    Alto: alto,
-    Largo: largo,
-    Stock: stock,
-    Vidrios: vidrios,
-    Hstrabajo: hsTrabajo,
-    Lijas: lijas,
-    Pinceles: pinceles,
-    Rodillos: rodillos,
-    Luz: luz,
-    Pintura: pintura,
-    Cola: cola,
-    Silastic: silastic,
-    Diluyente: diluyente,
-    Flete: flete,
-    Mueble: mueble,
-    Costo: 0,
-    PrecioFinal: 0,
-    Proveedor: proveedor
-  }
-
-  if (proveedor == "-") {
-    app.dialog.alert("Ingrese el Proveedor!")
-  } else {
-    colProductos.add(producto)
-      .then(function (doc) {
-        console.log("Producto agregado");
-
+  colInsumos.orderBy("nombre").get()
+    .then(function (res) {
+      res.forEach(function (doc) {
+        info = doc.data()
+        insumos.push(info.precio)
       })
-      .catch(function (err) {
-        console.log("Error al agregar producto")
-      })
-  }
+
+      //Precios de insumos
+      precioUnCola = `${insumos[0]}`
+      precioUnDiluyente = `${insumos[1]}`
+      precioUnFlete = `${insumos[2]}`
+      precioUnLijas = `${insumos[3]}`
+      precioUnLuz = `${insumos[4]}`
+      precioUnPinceles = `${insumos[5]}`
+      precioUnPintura = `${insumos[6]}`
+      precioUnRodillos = `${insumos[7]}`
+      precioUnSilastic = `${insumos[8]}`
+      precioUnVidrio = `${insumos[9]}`
+
+      colManoDeObra.get()
+        .then(function (res) {
+          var valoresH = []
+
+          res.forEach(function (doc) {
+            datos = doc.data();
+            id = doc.id
+            valoresH.push(datos.valorH)
+
+          })
+
+          precioHora = parseInt(valoresH[0] + valoresH[1])          
+        
+          //Inputs
+          nombre = $$("#newPNombre").val()
+          tipo = $$("#newPTipo").val()
+          color = $$("#newPColor").val()
+          ancho = $$("#newPAncho").val()
+          alto = $$("#newPAlto").val()
+          largo = $$("#newPLargo").val()
+          stock = Number($$("#newPStock").val())
+          vidrios = Number($$("#newPVidrios").val())
+          hsTrabajo = Number($$("#newPHsTrabajo").val())
+          lijas = Number($$("#newPLijas").val())
+          pinceles = Number($$("#newPPinceles").val())
+          rodillos = Number($$("#newPRodillos").val())
+          luz = Number($$("#newPLuz").val())
+          pintura = Number($$("#newPPintura").val())
+          cola = Number($$("#newPCola").val())
+          silastic = Number($$("#newPSilastic").val())
+          diluyente = Number($$("#newPDiluyente").val())
+          flete = Number($$("#newPFlete").val())
+          precioMueble = Number($$("#newPMueble").val())
+          proveedor = $$("#newPProveedor").val()
+
+          //Calculo de costo total insumos
+          costoTotal = parseInt((precioUnLijas * lijas) + (precioUnPinceles * pinceles) + (precioUnRodillos * rodillos) + (precioUnPintura * pintura) + (precioUnCola * cola) + (precioUnSilastic * silastic) + (precioUnVidrio * vidrios) + (precioUnDiluyente * diluyente) + (precioMueble) + (precioUnFlete * flete) + (precioUnLuz * luz))
+
+          //Calculo de costo total MO
+          costoTotalMO = parseInt(hsTrabajo * precioHora)
+        
+          precioTotalDelProducto = costoTotalMO + costoTotal
+
+          producto =
+          {
+            Nombre: nombre,
+            Tipo: tipo,
+            Color: color,
+            Ancho: ancho,
+            Alto: alto,
+            Largo: largo,
+            Stock: stock,
+            Vidrios: vidrios,
+            Hstrabajo: hsTrabajo,
+            Lijas: lijas,
+            Pinceles: pinceles,
+            Rodillos: rodillos,
+            Luz: luz,
+            Pintura: pintura,
+            Cola: cola,
+            Silastic: silastic,
+            Diluyente: diluyente,
+            Flete: flete,
+            PrecioMueble: precioMueble,
+            CostoMO: costoTotalMO,
+            CostoIn: costoTotal,
+            PrecioFinal: precioTotalDelProducto,
+            Proveedor: proveedor
+          }
+
+          if (proveedor == "-") {
+            app.dialog.alert("Ingrese el Proveedor!")
+          } else {
+            colProductos.add(producto)
+              .then(function (doc) {
+                console.log("Producto agregado");
+
+                texto = `<h3>Cargando nuevo producto...</h3>`
+                pantalla = '/products/'
+                loader(texto, pantalla)
+
+              })
+              .catch(function (err) {
+                console.log("Error al agregar producto")
+              })
+          }
+
+        })
+        
+        .catch(function (err) {
+          console.log("Error al cargar precios insumos y Mo")
+        })
+
+    })
+    .catch(function (err) {
+      console.log("Error al agregar producto")
+    })
+
 }
 
+//Función reset filtros
+function resetFiltros (){
+  variableOrdenamiento = "Proveedor"
+  valorOrdenamiento = "asc"
+  variableQuery = "Proveedor"
+  operadorQuery = "!="
+  valorQuery = "-"
+}
 
 //Función para ver lista de productos
 function verProductos() {
-
+  products = []
+  
 
   colProductos.orderBy(variableOrdenamiento, valorOrdenamiento).where(variableQuery, operadorQuery, valorQuery).get()
     .then(function (res) {
-      products = []
+      
       res.forEach(function (doc) {
 
         info = doc.data()
+        id = doc.id
 
-        products.push(info);
+        products.push({ informacion: info, id: id });
       });
+
+      console.log(products);
 
       // Iterar sobre el array
       for (i = 0; i < products.length; i++) {
@@ -267,41 +343,51 @@ function verProductos() {
         var nuevaFila = $$('<tr>');
 
         // Crear celda para el valor
-        var celdaNombre = $$('<td>').text(`${products[i].Nombre}-${products[i].Tipo}`);
-        var celdaColor = $$('<td>').text(products[i].Color);
-        var celdaPrecio = $$('<td>').text(products[i].PrecioFinal);
-        var celdaMedida = $$('<td>').text(`${products[i].Ancho}x${products[i].Largo}x${products[i].Ancho}`);
-        var celdaStock = $$('<td>').text(products[i].Stock);
-        var celdaProveedor = $$('<td>').text(products[i].Proveedor);
+        var celdaNombre = $$('<td>').text(`${products[i].informacion.Nombre}-${products[i].informacion.Tipo}`);
+        var celdaColor = $$('<td>').text(products[i].informacion.Color);
+        var celdaPrecio = $$('<td>').text(products[i].informacion.PrecioFinal);
+        var celdaMedida = $$('<td>').text(`${products[i].informacion.Ancho}x${products[i].informacion.Largo}x${products[i].informacion.Ancho}`);
+        var celdaStock = $$('<td>').text(products[i].informacion.Stock);
+        var celdaProveedor = $$('<td>').text(products[i].informacion.Proveedor);
 
         btnDetalles = $$(`<input id="${i}" type="button" value="+" class="button button-small button-round button-fill color-green">`)
         btnDetalles.data("valorId", `${i}`)
         btnDetalles.on("click", function () {
           var dataId = $$(this).data("valorId")
 
-          tituloProductoDetallado = `${products[dataId].Nombre}-${products[dataId].Tipo}`
-          tituloInsumos = `${products[dataId].Nombre}-${products[dataId].Tipo}`
+          tituloProductoDetallado = `${products[dataId].informacion.Nombre}-${products[dataId].informacion.Tipo}`
+          tituloInsumos = `${products[dataId].informacion.Nombre}-${products[dataId].informacion.Tipo}`
           mostrarMObra()
-          
-          
+
+
           //Variables del producto seleccionado
-          precioUnMueble = products[dataId].PrecioMueble
-          cantLijas = `${products[dataId].Lijas}`
-          cantPinceles = `${products[dataId].Pinceles}`
-          cantRodillos = `${products[dataId].Rodillos}`
-          cantPintura = `${products[dataId].Pintura}`
-          cantCola = `${products[dataId].Cola}`
-          cantSilastic = `${products[dataId].Silastic}`
-          cantVidrio = `${products[dataId].Vidrios}`
-          cantDiluyente = `${products[dataId].Diluyente}`
-          cantMueble = `${products[dataId].Mueble}`
-          cantFlete = `${products[dataId].Flete}`
-          cantLuz = `${products[dataId].Luz}`
-          cantHsTrabajo = `${products[dataId].Hstrabajo}`
+          precioUnMueble = products[dataId].informacion.PrecioMueble
+          cantLijas = `${products[dataId].informacion.Lijas}`
+          cantPinceles = `${products[dataId].informacion.Pinceles}`
+          cantRodillos = `${products[dataId].informacion.Rodillos}`
+          cantPintura = `${products[dataId].informacion.Pintura}`
+          cantCola = `${products[dataId].informacion.Cola}`
+          cantSilastic = `${products[dataId].informacion.Silastic}`
+          cantVidrio = `${products[dataId].informacion.Vidrios}`
+          cantDiluyente = `${products[dataId].informacion.Diluyente}`
+          cantMueble = 1
+          cantFlete = `${products[dataId].informacion.Flete}`
+          cantLuz = `${products[dataId].informacion.Luz}`
+          cantHsTrabajo = `${products[dataId].informacion.Hstrabajo}`
 
 
           //Función para mostrar precios
           mostrarInsumos()
+
+          //Guardar Costos en la db
+          setTimeout(function () {
+            idProd = products[dataId].id
+            colProductos.doc(idProd).update({ CostoIn: costoTotal, CostoMO: costoTotalMO })
+              .then(function (resp) {
+                console.log("Costos reflejados");
+              })
+              .catch(function (err) { console.log(err); })
+          }, 3000)
 
           // Agregar celdas a la fila
           mainView.router.navigate("/detailsProduct/")
@@ -419,7 +505,7 @@ function mostrarInsumos() {
       precioTotalFlete = (precioUnFlete * cantFlete)
       precioTotalLijas = (precioUnLijas * cantLijas)
       precioTotalLuz = (precioUnLuz * cantLuz)
-      precioTotalMueble = (precioUnMueble * cantMueble)
+      precioTotalMueble = (precioUnMueble)
       precioTotalPinceles = (precioUnPinceles * cantPinceles)
       precioTotalPintura = (precioUnPintura * cantPintura)
       precioTotalRodillos = (precioUnRodillos * cantRodillos)
@@ -427,7 +513,8 @@ function mostrarInsumos() {
       precioTotalVidrio = (precioUnVidrio * cantVidrio)
 
       //Calculo de costo total
-      costoTotal = (precioUnLijas * cantLijas) + (precioUnPinceles * cantPinceles) + (precioUnRodillos * cantRodillos) + (precioUnPintura * cantPintura) + (precioUnCola * cantCola) + (precioUnSilastic * cantSilastic) + (precioUnVidrio * cantVidrio) + (precioUnDiluyente * cantDiluyente) + (precioUnMueble * cantMueble) + (precioUnFlete * cantFlete) + (precioUnLuz * cantLuz)
+      costoTotal = parseInt((precioUnLijas * cantLijas) + (precioUnPinceles * cantPinceles) + (precioUnRodillos * cantRodillos) + (precioUnPintura * cantPintura) + (precioUnCola * cantCola) + (precioUnSilastic * cantSilastic) + (precioUnVidrio * cantVidrio) + (precioUnDiluyente * cantDiluyente) + (precioUnMueble) + (precioUnFlete * cantFlete) + (precioUnLuz * cantLuz))
+
     })
 
 
@@ -444,16 +531,14 @@ function mostrarMObra() {
 
       res.forEach(function (doc) {
         datos = doc.data();
-
+        id = doc.id
         valoresH.push(datos.valorH)
 
-        precioHora = datos.valorHOF
+        //precioHora = datos.valorHOF
       })
-      
+
       precioHora = parseInt(valoresH[0] + valoresH[1])
-      costoTotalMO = precioHora * cantHsTrabajo
-
-
+      costoTotalMO = parseInt(precioHora * cantHsTrabajo)
     })
     .catch(function (err) {
       console.log(err)
@@ -552,10 +637,10 @@ function actualizarTodosPreciosMO() {
 }
 
 //Función para espera de carga de datos
-function toListPreciosIn (){
-  setTimeout(function(){
+function toListPreciosIn() {
+  setTimeout(function () {
     mainView.router.navigate('/preciosInsumos/')
-},1000)
+  }, 1000)
 }
 
 //Función loader para actualización
@@ -638,22 +723,22 @@ function actualizarPreciosInsumos() {
             })
             .catch(function (err) { console.log(err); })
         })
-          .catch(function (err) { console.log(err); })
+        .catch(function (err) { console.log(err); })
 
     });
   });
 }
 
 //Actualizar todos los precios de insumos
-function actualizarTodosLosInsumos (){
+function actualizarTodosLosInsumos() {
 
   porcentaje = $$("#porcentActualTodosIn").val()
 
   colInsumos.orderBy("nombre").get()
-    .then(function(res){
+    .then(function (res) {
       precios = []
       ids = []
-      res.forEach(function(doc){
+      res.forEach(function (doc) {
         info = doc.data()
         id = doc.id
         precio = info.precio
@@ -667,22 +752,22 @@ function actualizarTodosLosInsumos (){
       })
 
       for (i = 0; i < ids.length; i++) {
-        colInsumos.doc(ids[i]).update({ precio: precios[i]})
-          .then(function(res){
+        colInsumos.doc(ids[i]).update({ precio: precios[i] })
+          .then(function (res) {
             console.log("Todos los precios actualizados correctamente");
             texto = `<h3>Actualizando precios...</h3>`
             pantalla = '/prices/'
             loader(texto, pantalla)
           })
-          .catch(function(err){console.log(err);})
+          .catch(function (err) { console.log(err); })
       }
 
     })
-    .catch(function(err){console.log(err);})
+    .catch(function (err) { console.log(err); })
 }
 
 //Ver y actualizar proveedores individualmente
-function actualizarProveedores (){
+function actualizarProveedores() {
 
   botones = document.querySelectorAll('.botonActProv');
   inputs = document.querySelectorAll('.porcentajeProv');
@@ -691,17 +776,18 @@ function actualizarProveedores (){
     boton.addEventListener('click', function () {
 
       console.log(boton.id, index, inputs[index].value);
-      
 
-      colProductos.where("Proveedor","==",boton.id).get()
+
+      colProductos.where("Proveedor", "==", boton.id).get()
         .then(function (res) {
           preciosProveedores = []
           res.forEach(function (doc) {
             info = doc.data()
             id = doc.id
-            preciosProveedores.push({id: id, price: info.PrecioMueble})
+            console.log(info);
+            preciosProveedores.push({ id: id, price: info.PrecioMueble, costIn: info.CostoIn, costMo: info.CostoMO })
           })
-          
+
           console.log(preciosProveedores);
           for (i = 0; i < preciosProveedores.length; i++) {
             valor = preciosProveedores[i].price
@@ -709,53 +795,67 @@ function actualizarProveedores (){
 
             precioActualizado = parseInt(valor * (1 + (porcentajeDeActual / 100)))
 
-            console.log(precioActualizado);
-             
-            
-            colProductos.doc(preciosProveedores[i].id).update({PrecioMueble: precioActualizado})
+            precioFinalActualizado = parseInt(precioActualizado + preciosProveedores[i].costIn + preciosProveedores[i].costMo)
+
+            console.log(precioActualizado, precioFinalActualizado);
+
+
+            colProductos.doc(preciosProveedores[i].id).update({ PrecioMueble: precioActualizado, PrecioFinal: precioFinalActualizado})
               .then(function (res) {
                 console.log("Precio actualizado correctamente")
               })
               .catch(function (err) { console.log(err); })
-              
-            }
-            texto = `<h3>Actualizando precios del proveedor seleccionado...</h3>`
-            pantalla = '/index/'
-            loader(texto, pantalla)
+
+          }
+          texto = `<h3>Actualizando precios del proveedor seleccionado...</h3>`
+          pantalla = '/index/'
+          loader(texto, pantalla)
         })
         .catch(function (err) { console.log(err); })
-      })})
+    })
+  })
 
 }
 
 //Ver y actualizar todos los proveedores
-function actualizarTodosLosProveedores (){
+function actualizarTodosLosProveedores() {
   porcentajeTodos = $$("#porcentActualTodosProveedores").val()
 
   colProductos.orderBy("Proveedor").get()
-  .then(function(res){
+    .then(function (res) {
 
-    idsValores = []
-    res.forEach(function(doc){
-      id = doc.id
-      info = doc.data()
-      valor = info.PrecioMueble
+      idsValores = []
+      res.forEach(function (doc) {
+        id = doc.id
+        info = doc.data()
+        valor = info.PrecioMueble
 
-      precioActualizado = parseInt(valor * (1 + (porcentajeTodos / 100)))
-      idsValores.push({id: id, precio: precioActualizado})
-      
+        precioActualizado = parseInt(valor * (1 + (porcentajeTodos / 100)))
+        idsValores.push({ id: id, precio: precioActualizado })
+
+      })
+      console.log(idsValores);
+      for (i = 0; i < idsValores.length; i++) {
+        colProductos.doc(idsValores[i].id).update({ PrecioMueble: idsValores[i].precio })
+          .then(function (res) { console.log("Todos los precios actualizados"); })
+          .catch(function (err) { console.log(err); })
+      }
+      texto = `<h3>Actualizando precios de todos proveedores...</h3>`
+      pantalla = '/index/'
+      loader(texto, pantalla)
+
     })
-    console.log(idsValores);
-    for (i = 0; i < idsValores.length; i++) {
-      colProductos.doc(idsValores[i].id).update({PrecioMueble: idsValores[i].precio})
-      .then(function(res){ console.log("Todos los precios actualizados");})
-      .catch(function(err){console.log(err);})
-    }
-    texto = `<h3>Actualizando precios de todos proveedores...</h3>`
-    pantalla = '/index/'
-    loader(texto, pantalla)
+    .catch(function (err) { console.log(err); })
 
-  })
-  .catch(function(err){console.log(err);})
-  
+}
+
+//Función para guardar el precio final en cada producto
+function guardarPrecioFinal() {
+  colProductos.doc("GrCa2cemdlHT46hsX6rm").get()
+    .then(function (resp) {
+      console.log(resp.data());
+
+    })
+    .catch(function (err) { console.log(err); })
+
 }
