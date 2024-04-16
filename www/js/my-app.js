@@ -40,7 +40,7 @@ $$(document).on('deviceready', function () {
 
 // Option 1. Using one 'page:init' handler for all pages
 $$(document).on('page:init', function (e) {
-  $$("#btnPrueba").on('click', guardarPrecioFinal)
+  //$$("#btnPrueba").on('click', )
 })
 
 $$(document).on('page:init', '.page[data-name="index"]', function (e) {
@@ -74,7 +74,7 @@ $$(document).on('page:init', '.page[data-name="fliers"]', function (e) {
 
 $$(document).on('page:init', '.page[data-name="detailsProduct"]', function (e) {
   $$("#detailsProductTitle").text(tituloProductoDetallado);
-  $$("#volverDetailProducts").on('click',resetFiltros)
+  $$("#volverDetailProducts").on('click', resetFiltros)
 
 })
 
@@ -220,8 +220,8 @@ function añadirProducto() {
 
           })
 
-          precioHora = parseInt(valoresH[0] + valoresH[1])          
-        
+          precioHora = parseInt(valoresH[0] + valoresH[1])
+
           //Inputs
           nombre = $$("#newPNombre").val()
           tipo = $$("#newPTipo").val()
@@ -249,7 +249,7 @@ function añadirProducto() {
 
           //Calculo de costo total MO
           costoTotalMO = parseInt(hsTrabajo * precioHora)
-        
+
           precioTotalDelProducto = costoTotalMO + costoTotal
 
           producto =
@@ -297,7 +297,7 @@ function añadirProducto() {
           }
 
         })
-        
+
         .catch(function (err) {
           console.log("Error al cargar precios insumos y Mo")
         })
@@ -310,7 +310,7 @@ function añadirProducto() {
 }
 
 //Función reset filtros
-function resetFiltros (){
+function resetFiltros() {
   variableOrdenamiento = "Proveedor"
   valorOrdenamiento = "asc"
   variableQuery = "Proveedor"
@@ -321,11 +321,11 @@ function resetFiltros (){
 //Función para ver lista de productos
 function verProductos() {
   products = []
-  
+
 
   colProductos.orderBy(variableOrdenamiento, valorOrdenamiento).where(variableQuery, operadorQuery, valorQuery).get()
     .then(function (res) {
-      
+
       res.forEach(function (doc) {
 
         info = doc.data()
@@ -333,8 +333,6 @@ function verProductos() {
 
         products.push({ informacion: info, id: id });
       });
-
-      console.log(products);
 
       // Iterar sobre el array
       for (i = 0; i < products.length; i++) {
@@ -558,7 +556,7 @@ function pricesMO() {
 
       }
       )
-      console.log(valores);
+
       precioHoraMOAyudante = valores[0]
       precioHoraMOOficial = valores[1]
     })
@@ -576,7 +574,7 @@ function actualizarPreciosMOOf(porcent) {
     .then(function () {
       $$("#precioActualizadoOficial").text(precioActualizadoOf)
       console.log("Actualizado correctamente");
-
+      refreshInsumosCostos()
       texto = `<h3>Actualizando precio...</h3> <h5>Nuevo valor: $${precioActualizadoOf}</h5>`
       pantalla = '/prices/'
       loader(texto, pantalla)
@@ -597,7 +595,7 @@ function actualizarPreciosMOAy(porcent) {
     .then(function () {
       $$("#precioActualizadoAyudante").text(precioActualizadoAy)
       console.log("Actualizado correctamente");
-
+      refreshInsumosCostos()
       texto = `<h3>Actualizando precio...</h3> <h5>Nuevo valor: $${precioActualizadoAy}</h5>`
       pantalla = '/prices/'
       loader(texto, pantalla)
@@ -625,6 +623,7 @@ function actualizarTodosPreciosMO() {
   colManoDeObra.doc("valorHOF").update({ valorH: precioActualizadoOf })
     .then(function () {
       console.log("Precio Oficial actualizado correctamente");
+      refreshInsumosCostos()
     })
     .catch(function (err) {
       console.log(err);
@@ -682,7 +681,6 @@ function pricesInsumos() {
       precioUnSilastic = `${preciosInsumos[8]}`
       precioUnVidrio = `${preciosInsumos[9]}`
 
-      console.log(preciosInsumos);
     })
     .catch(function (err) { console.log(err); })
 }
@@ -710,6 +708,9 @@ function actualizarPreciosInsumos() {
             nombres.push(info.nombre)
           })
 
+          console.log(nombres);
+          console.log(ids);
+
           insumoActualizado = nombres[index]
 
           valorId = ids[index]
@@ -717,6 +718,7 @@ function actualizarPreciosInsumos() {
           colInsumos.doc(valorId).update({ precio: resultado })
             .then(function (res) {
               console.log(`Valor de ${insumoActualizado} actualizado correctamente`);
+              refreshInsumosCostos()
               texto = `<h3>Actualizando precio...</h3> <h5>Nuevo valor: $${resultado}</h5>`
               pantalla = '/prices/'
               loader(texto, pantalla)
@@ -755,6 +757,7 @@ function actualizarTodosLosInsumos() {
         colInsumos.doc(ids[i]).update({ precio: precios[i] })
           .then(function (res) {
             console.log("Todos los precios actualizados correctamente");
+            refreshInsumosCostos()
             texto = `<h3>Actualizando precios...</h3>`
             pantalla = '/prices/'
             loader(texto, pantalla)
@@ -800,9 +803,10 @@ function actualizarProveedores() {
             console.log(precioActualizado, precioFinalActualizado);
 
 
-            colProductos.doc(preciosProveedores[i].id).update({ PrecioMueble: precioActualizado, PrecioFinal: precioFinalActualizado})
+            colProductos.doc(preciosProveedores[i].id).update({ PrecioMueble: precioActualizado, PrecioFinal: precioFinalActualizado })
               .then(function (res) {
                 console.log("Precio actualizado correctamente")
+                refreshInsumosCostos()
               })
               .catch(function (err) { console.log(err); })
 
@@ -831,13 +835,20 @@ function actualizarTodosLosProveedores() {
         valor = info.PrecioMueble
 
         precioActualizado = parseInt(valor * (1 + (porcentajeTodos / 100)))
-        idsValores.push({ id: id, precio: precioActualizado })
+        idsValores.push({ id: id, precio: precioActualizado, costIn: info.CostoIn, costMo: info.CostoMO })
+
 
       })
       console.log(idsValores);
       for (i = 0; i < idsValores.length; i++) {
-        colProductos.doc(idsValores[i].id).update({ PrecioMueble: idsValores[i].precio })
-          .then(function (res) { console.log("Todos los precios actualizados"); })
+
+        precioTotalActualizado = parseInt(idsValores[i].costIn + idsValores[i].costMo + idsValores[i].precio)
+
+        colProductos.doc(idsValores[i].id).update({ PrecioMueble: idsValores[i].precio, PrecioFinal: precioTotalActualizado })
+          .then(function (res) { console.log("Todos los precios actualizados");
+          refreshInsumosCostos()
+        })
+
           .catch(function (err) { console.log(err); })
       }
       texto = `<h3>Actualizando precios de todos proveedores...</h3>`
@@ -857,5 +868,80 @@ function guardarPrecioFinal() {
 
     })
     .catch(function (err) { console.log(err); })
+
+}
+
+//Función para actualizar precios y costos finales
+function refreshInsumosCostos() {
+  colProductos.orderBy("Nombre").get()
+    .then(function (res) {
+
+      cantidades = []
+
+      res.forEach(function (doc) {
+        info = doc.data()
+
+        id = doc.id
+
+        cantUnCola = info.Cola
+        cantUnDiluyente = info.Diluyente
+        cantUnFlete = info.Flete
+        cantUnLijas = info.Lijas
+        cantUnLuz = info.Luz
+        cantUnPinceles = info.Pinceles
+        cantUnPintura = info.Pintura
+        cantUnRodillos = info.Rodillos
+        cantUnSilastic = info.Silastic
+        cantUnVidrio = info.Vidrios
+        mueble = info.PrecioMueble
+        hsTrabajo = info.Hstrabajo
+
+
+        cantidades.push({ id: id, cola: cantUnCola, diluyente: cantUnDiluyente, flete: cantUnFlete, lijas: cantUnLijas, luz: cantUnLuz, pinceles: cantUnPinceles, pintura: cantUnPintura, rodillos: cantUnRodillos, silastic: cantUnSilastic, vidrio: cantUnVidrio, mueble: mueble, hsTrabajo: hsTrabajo })
+      })
+
+      colManoDeObra.get()
+        .then(function (res) {
+          var valoresH = []
+
+          res.forEach(function (doc) {
+            datos = doc.data();
+            valoresH.push(datos.valorH)
+          })
+
+          precioHora = parseInt(valoresH[0] + valoresH[1])
+
+          colInsumos.orderBy("nombre").get()
+            .then(function (resp) {
+              priceInsumo = []
+              resp.forEach(function (docum) {
+                prices = docum.data()
+                pricesIn = prices.precio
+                priceInsumo.push(pricesIn)
+              })
+
+              for (i = 0; i < cantidades.length; i++) {
+                totalInsumos = parseInt((cantidades[i].cola * priceInsumo[0]) + (cantidades[i].diluyente * priceInsumo[1]) + (cantidades[i].flete * priceInsumo[2]) + (cantidades[i].lijas * priceInsumo[3]) + (cantidades[i].luz * priceInsumo[4]) + (cantidades[i].pinceles * priceInsumo[5]) + (cantidades[i].pintura * priceInsumo[6]) + (cantidades[i].rodillos * priceInsumo[7]) + (cantidades[i].silastic * priceInsumo[8]) + (cantidades[i].vidrio * priceInsumo[9]) + (cantidades[i].mueble))
+                totalMO = parseInt((cantidades[i].hsTrabajo * precioHora))
+                precioFinal = parseInt(totalInsumos + totalMO)
+
+                console.log(totalInsumos, totalMO, cantidades[i].hsTrabajo);
+
+                colProductos.doc(cantidades[i].id).update({ CostoIn: totalInsumos, CostoMO: totalMO, PrecioFinal: precioFinal })
+                  .then(function (resp) {
+                    console.log("Costos reflejados Ok");
+                    
+                  })
+                  .catch(function (err) { console.log(err); })
+              }
+
+            })
+            .catch(function (err) { console.log(err) })
+
+        })
+        .catch(function (err) { console.log(err); })
+
+    })
+    .catch(function (err) { console.log(err) })
 
 }
